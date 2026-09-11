@@ -1,0 +1,11 @@
+﻿# System & Agent Caches
+.agent/
+.agents/
+.gemini/
+.vscode/
+.idea/
+*.log
+*.tmp
+Thumbs.db
+Desktop.ini
+.DS_Store
