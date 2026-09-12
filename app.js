@@ -320,7 +320,15 @@ document.addEventListener('DOMContentLoaded', () => {
       modal_consent: "I agree to receive mutual fund guidance from Suresh Saini (ARN-347947).",
       modal_submit_btn: "Schedule Free Consultation",
       modal_success_title: "Enquiry Sent Successfully!",
-      modal_success_desc: "Suresh Saini has received your request and will connect with you shortly."
+      modal_success_desc: "Suresh Saini has received your request and will connect with you shortly.",
+      btn_view_more_solutions: "View More Solutions (9 more)",
+      btn_show_less_solutions: "Show Less Solutions",
+      btn_explore_all_solutions: "Explore Dedicated Solutions Page →",
+      btn_view_more_topics: "View More Topics (10 more)",
+      btn_show_less_topics: "Show Less Topics",
+      btn_explore_all_learn: "Explore Dedicated Learning Center →",
+      btn_view_more_faqs: "View More Questions (10 more)",
+      btn_show_less_faqs: "Show Less Questions"
     },
     hi: {
       skip_to_content: "मुख्य सामग्री पर जाएं",
@@ -586,7 +594,15 @@ document.addEventListener('DOMContentLoaded', () => {
       modal_consent: "मैं सुरेश सैनी (ARN-347947) से म्यूचुअल फंड मार्गदर्शन प्राप्त करने के लिए सहमत हूँ।",
       modal_submit_btn: "मुफ्त परामर्श बुक करें",
       modal_success_title: "अनुरोध सफलतापूर्वक भेजा गया!",
-      modal_success_desc: "सुरेश सैनी को आपका विवरण मिल गया है और वे शीघ्र ही आपसे संपर्क करेंगे।"
+      modal_success_desc: "सुरेश सैनी को आपका विवरण मिल गया है और वे शीघ्र ही आपसे संपर्क करेंगे।",
+      btn_view_more_solutions: "और समाधान देखें (9 और)",
+      btn_show_less_solutions: "कम समाधान देखें",
+      btn_explore_all_solutions: "समर्पित समाधान पेज देखें →",
+      btn_view_more_topics: "और विषय देखें (10 और)",
+      btn_show_less_topics: "कम विषय देखें",
+      btn_explore_all_learn: "समर्पित लर्निंग सेंटर देखें →",
+      btn_view_more_faqs: "और सवाल देखें (10 और)",
+      btn_show_less_faqs: "कम सवाल देखें"
     }
   };
 
@@ -1273,5 +1289,82 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, { passive: true });
   }
+
+  // ==========================================================================
+  // 9. SECTION VIEW MORE / SHOW LESS TOGGLES (SOLUTIONS, LEARN, FAQS)
+  // ==========================================================================
+  function initSectionToggles() {
+    const toggleConfigs = [
+      {
+        btnId: 'toggle-solutions-btn',
+        targetSelector: '#solutions .hidden-initially',
+        moreKey: 'btn_view_more_solutions',
+        lessKey: 'btn_show_less_solutions',
+        moreDefault: 'View More Solutions (9 more)',
+        lessDefault: 'Show Less Solutions'
+      },
+      {
+        btnId: 'toggle-learn-btn',
+        targetSelector: '#learn .hidden-initially',
+        moreKey: 'btn_view_more_topics',
+        lessKey: 'btn_show_less_topics',
+        moreDefault: 'View More Topics (10 more)',
+        lessDefault: 'Show Less Topics'
+      },
+      {
+        btnId: 'toggle-faqs-btn',
+        targetSelector: '#faqs .hidden-initially',
+        moreKey: 'btn_view_more_faqs',
+        lessKey: 'btn_show_less_faqs',
+        moreDefault: 'View More Questions (10 more)',
+        lessDefault: 'Show Less Questions'
+      }
+    ];
+
+    toggleConfigs.forEach(cfg => {
+      const btn = document.getElementById(cfg.btnId);
+      if (!btn) return;
+
+      btn.addEventListener('click', () => {
+        const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+        const newExpanded = !isExpanded;
+        btn.setAttribute('aria-expanded', newExpanded.toString());
+
+        const targets = document.querySelectorAll(cfg.targetSelector);
+        targets.forEach(el => {
+          if (newExpanded) {
+            el.classList.add('revealed');
+          } else {
+            el.classList.remove('revealed');
+          }
+        });
+
+        // Update button text and icon state
+        const lang = document.documentElement.lang || 'en';
+        const txtSpan = btn.querySelector('.toggle-btn-text');
+        if (txtSpan) {
+          const dict = translations[lang] || translations.en;
+          if (newExpanded) {
+            txtSpan.textContent = dict[cfg.lessKey] || cfg.lessDefault;
+            txtSpan.setAttribute('data-i18n', cfg.lessKey);
+          } else {
+            txtSpan.textContent = dict[cfg.moreKey] || cfg.moreDefault;
+            txtSpan.setAttribute('data-i18n', cfg.moreKey);
+          }
+        }
+        btn.classList.toggle('expanded', newExpanded);
+
+        // If collapsing, scroll smoothly back to the section container top
+        if (!newExpanded) {
+          const section = btn.closest('section');
+          if (section) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+  }
+
+  initSectionToggles();
 
 });
