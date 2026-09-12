@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GROWKNOW - MAIN APPLICATION & INTERACTION CONTROLLER
+   BLUERAY WEALTH - MAIN APPLICATION & INTERACTION CONTROLLER
    Bilingual Translation Engine (English & Hindi), Light/Dark Theme,
    15-Field Portfolio Review Form, Lead Modal, Learning Deep-Dive, & FAQs
    ========================================================================== */
@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-  const savedTheme = localStorage.getItem('growknow_theme');
+  const savedTheme = localStorage.getItem('blueraywealth_theme') || localStorage.getItem('growknow_theme');
 
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('growknow_theme', theme);
+    localStorage.setItem('blueraywealth_theme', theme);
 
     const moonIcon = document.querySelector('.theme-icon-moon');
     const sunIcon = document.querySelector('.theme-icon-sun');
@@ -31,8 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    if (window.GrowKnowCalc && typeof window.GrowKnowCalc.updateTheme === 'function') {
-      window.GrowKnowCalc.updateTheme();
+    const calcApi = window.BlueRayWealthCalc || window.GrowKnowCalc;
+    if (calcApi && typeof calcApi.updateTheme === 'function') {
+      calcApi.updateTheme();
     }
   }
 
@@ -606,11 +607,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  let currentLang = localStorage.getItem('growknow_lang') || 'en';
+  let currentLang = localStorage.getItem('blueraywealth_lang') || localStorage.getItem('growknow_lang') || 'en';
 
   function setLanguage(lang) {
     currentLang = lang;
-    localStorage.setItem('growknow_lang', lang);
+    localStorage.setItem('blueraywealth_lang', lang);
     document.documentElement.lang = lang;
 
     const dict = translations[lang] || translations.en;
@@ -632,8 +633,9 @@ document.addEventListener('DOMContentLoaded', () => {
       drawerLangLabel.textContent = lang === 'en' ? 'Switch to हिंदी' : 'Switch to English';
     }
 
-    if (window.GrowKnowCalc && typeof window.GrowKnowCalc.refreshAll === 'function') {
-      window.GrowKnowCalc.refreshAll();
+    const calcApi = window.BlueRayWealthCalc || window.GrowKnowCalc;
+    if (calcApi && typeof calcApi.refreshAll === 'function') {
+      calcApi.refreshAll();
     }
   }
 

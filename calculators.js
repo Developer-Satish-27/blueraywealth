@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GROWKNOW - INSTITUTIONAL TOOLS & CALCULATORS SUITE
+   BLUERAY WEALTH - INSTITUTIONAL TOOLS & CALCULATORS SUITE
    Tier 1: Life Goal Calculators (Retirement, Child Education, Child Marriage, Other)
    Tier 2: Financial Calculators (SIP, Lump-Sum, SIP vs FD with Chart.js)
    Tier 3: Quick Tools (Cost of Delay, Inflation Impact)
@@ -796,6 +796,7 @@
       }
     }
   };
+  window.BlueRayWealthCalc = window.BlueRayCalc;
   window.GrowKnowCalc = window.BlueRayCalc;
 
   // Initialization
