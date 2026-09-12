@@ -460,8 +460,29 @@ img, svg {
 .brand-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
+}
+.brand-logo-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(15, 43, 92, 0.28);
+  border: 1.5px solid rgba(212, 175, 55, 0.4);
+  flex-shrink: 0;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.brand-logo:hover .brand-logo-img {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
+.footer-logo .brand-logo-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  border: 2px solid rgba(212, 175, 55, 0.5);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 .logo-mark {
   position: relative;
@@ -499,16 +520,29 @@ img, svg {
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1.1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
+}
+[data-theme="light"] .brand-title {
+  color: #0f2b5c;
 }
 .brand-highlight {
   color: var(--color-accent);
 }
+.footer-logo .brand-title {
+  color: #FFFFFF;
+}
+.footer-logo .brand-highlight {
+  color: #34D399;
+}
 .brand-subtitle {
-  font-size: 0.725rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 700;
   color: var(--text-muted);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.footer-logo .brand-subtitle {
+  color: #94A3B8;
 }
 
 /* Nav Links */

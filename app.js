@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
       bar_amfi: "AMFI Registered Mutual Fund Distributor (ARN: 347947)",
       bar_location: "Jaipur, Rajasthan • Serving Pan-India",
       bar_tagline: "Education • Guidance • Support",
-      nav_subtag: "Mutual Fund Guidance",
+      nav_subtag: "Trust • Guidance • Growth",
       nav_home: "Home",
       nav_about: "About",
       nav_mf: "Mutual Funds",
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn_discuss_strategy: "Discuss The Right Allocation For You",
       nj_kicker: "Institutional Backbone",
       nj_heading: "Why NJ Wealth?",
-      nj_subtitle: "GrowKnow partners with NJ Wealth—one of India's largest and most trusted financial products distribution networks—to provide you with institutional-grade security, cutting-edge technology, and seamless service.",
+      nj_subtitle: "BlueRay Wealth partners with NJ Wealth—one of India's largest and most trusted financial products distribution networks—to provide you with institutional-grade security, cutting-edge technology, and seamless service.",
       nj_c1_title: "Bank-to-Fund Direct Security",
       nj_c1_desc: "Your money never passes through individual accounts. All transactions are routed directly between your verified bank account and the respective mutual fund AMC or clearing corporation (NSE/BSE).",
       nj_c2_title: "Paperless Digital Ecosystem",
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nj_c3_desc: "Unrestricted access to all leading Asset Management Companies in India (SBI, HDFC, ICICI Prudential, Nippon, Kotak, Axis, Tata, Mirae, Parag Parikh, etc.) through a single unified desk.",
       nj_c4_title: "Consolidated Family Portfolio Tracking",
       nj_c4_desc: "Access comprehensive multi-folio statements, capital gains reports for easy tax filing, performance valuation, and family wealth summaries through secure portal access.",
-      about_kicker: "The Story Behind GrowKnow",
+      about_kicker: "The Story Behind BlueRay Wealth",
       about_heading: "Building Wealth Through Knowledge & Personal Trust.",
       about_role: "Mutual Fund Distributor",
       about_loc: "Jaipur, Rajasthan • Serving Pan India",
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cred_2: "Affiliated with NJ Wealth Distribution Network",
       cred_3: "Strict Adherence to SEBI & AMFI Code of Ethics",
       cred_4: "Focus on Educating First-Time & Long-Term Investors",
-      about_story_1: "GrowKnow was created with a straightforward mission: to eliminate confusion, mistrust, and aggressive sales pitches from mutual fund investing.",
+      about_story_1: "BlueRay Wealth was created with a straightforward mission: to eliminate confusion, mistrust, and aggressive sales pitches from mutual fund investing.",
       about_story_2: "For many Indian families—whether salaried professionals in Jaipur, local business owners in Rajasthan, or young investors starting their first job—the stock market can feel intimidating. Between complex jargon, endless fund options, and aggressive advertising, it is hard to know where to begin.",
       about_story_3: "We believe financial guidance should be human, transparent, and approachable. We do not push schemes or guarantee returns. Instead, we listen to your life aspirations, explain options in simple everyday language, and help you establish a sustainable, goal-oriented habit.",
       why_work_title: "Why Work With Us?",
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cta_subtext: "Whether you're starting your first SIP, reviewing an existing portfolio or planning for a future goal, start with understanding.",
       cta_talk_suresh: "Talk to Suresh",
       cta_explore_calc: "Explore Calculators",
-      footer_brand_sub: "Mutual Fund Guidance",
+      footer_brand_sub: "Trust • Guidance • Growth",
       footer_dist_role: "Mutual Fund Distributor",
       footer_nav_title: "Navigation",
       footer_sol_title: "Solutions",
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
       bar_amfi: "AMFI रजिस्टर्ड म्यूचुअल फंड वितरक (ARN: 347947)",
       bar_location: "जयपुर, राजस्थान • संपूर्ण भारत में सेवा",
       bar_tagline: "शिक्षा • मार्गदर्शन • निरंतर सहयोग",
-      nav_subtag: "म्यूचुअल फंड मार्गदर्शन",
+      nav_subtag: "विश्वास • मार्गदर्शन • विकास",
       nav_home: "होम",
       nav_about: "परिचय",
       nav_mf: "म्यूचुअल फंड",
@@ -500,7 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn_discuss_strategy: "सही आवंटन पर चर्चा करें",
       nj_kicker: "संस्थागत मजबूती",
       nj_heading: "NJ Wealth क्यों?",
-      nj_subtitle: "GrowKnow भारत के सबसे बड़े और सबसे भरोसेमंद वित्तीय वितरण नेटवर्कों में से एक NJ Wealth के साथ साझेदारी करता है—ताकि आपको संस्थागत सुरक्षा, उन्नत तकनीक और निर्बाध सेवा मिले।",
+      nj_subtitle: "BlueRay Wealth भारत के सबसे बड़े और सबसे भरोसेमंद वित्तीय वितरण नेटवर्कों में से एक NJ Wealth के साथ साझेदारी करता है—ताकि आपको संस्थागत सुरक्षा, उन्नत तकनीक और निर्बाध सेवा मिले।",
       nj_c1_title: "बैंक से फंड सीधा सुरक्षित लेनदेन",
       nj_c1_desc: "आपका पैसा कभी किसी व्यक्तिगत खाते में नहीं जाता। सभी लेनदेन आपके सत्यापित बैंक खाते और संबंधित म्यूचुअल फंड AMC या क्लीयरिंग कॉर्पोरेशन (NSE/BSE) के बीच सीधे होते हैं।",
       nj_c2_title: "पेपरलेस डिजिटल व्यवस्था",
@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nj_c3_desc: "भारत की सभी प्रमुख एसेट मैनेजमेंट कंपनियों (SBI, HDFC, ICICI प्रूडेंशियल, निप्पॉन, कोटक, एक्सिस, टाटा आदि) तक एक ही डेस्क से पहुंच।",
       nj_c4_title: "परिवार का समेकित पोर्टफोलियो ट्रैकिंग",
       nj_c4_desc: "सुरक्षित पोर्टल के माध्यम से बहु-फोलियो विवरण, टैक्स फाइलिंग के लिए कैपिटल गेन रिपोर्ट और पारिवारिक संपत्ति सारांश आसानी से देखें।",
-      about_kicker: "GrowKnow की कहानी",
+      about_kicker: "BlueRay Wealth की कहानी",
       about_heading: "ज्ञान और व्यक्तिगत विश्वास के माध्यम से धन का निर्माण।",
       about_role: "म्यूचुअल फंड वितरक",
       about_loc: "जयपुर, राजस्थान • संपूर्ण भारत में सेवा",
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cred_2: "NJ Wealth वितरण नेटवर्क से संबद्ध",
       cred_3: "SEBI और AMFI की आचार संहिता का कड़ाई से पालन",
       cred_4: "नए और दीर्घकालिक निवेशकों को शिक्षित करने पर विशेष ध्यान",
-      about_story_1: "GrowKnow की स्थापना एक स्पष्ट उद्देश्य के साथ की गई थी: म्यूचुअल फंड निवेश से भ्रम, अविश्वास और आक्रामक बिक्री को समाप्त करना।",
+      about_story_1: "BlueRay Wealth की स्थापना एक स्पष्ट उद्देश्य के साथ की गई थी: म्यूचुअल फंड निवेश से भ्रम, अविश्वास और आक्रामक बिक्री को समाप्त करना।",
       about_story_2: "जयपुर के वेतनभोगी कर्मचारियों, राजस्थान के व्यापारियों से लेकर पहली नौकरी शुरू करने वाले युवाओं तक—अक्सर शेयर बाज़ार डरावना लगता है। जटिल शब्दों और हज़ारों फंड्स के बीच यह समझना कठिन हो जाता है कि शुरुआत कहाँ से करें।",
       about_story_3: "हमारा मानना है कि वित्तीय मार्गदर्शन मानवीय, पारदर्शी और सहज होना चाहिए। हम योजनाओं को थोपते नहीं हैं और न ही रिटर्न की गारंटी देते हैं। हम आपकी आकांक्षाओं को सुनते हैं, रोज़मर्रा की भाषा में समझाते हैं और एक अनुशासित आदत बनाने में मदद करते हैं।",
       why_work_title: "हमारे साथ क्यों काम करें?",
@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cta_subtext: "चाहे आप अपनी पहली SIP शुरू कर रहे हों, पुराने पोर्टफोलियो की समीक्षा चाहते हों या किसी बड़े लक्ष्य की तैयारी कर रहे हों—शुरुआत सही समझ से करें।",
       cta_talk_suresh: "सुरेश सैनी से बात करें",
       cta_explore_calc: "कैलकुलेटर देखें",
-      footer_brand_sub: "म्यूचुअल फंड मार्गदर्शन",
+      footer_brand_sub: "विश्वास • मार्गदर्शन • विकास",
       footer_dist_role: "म्यूचुअल फंड वितरक",
       footer_nav_title: "नेविगेशन",
       footer_sol_title: "समाधान",
@@ -831,7 +831,7 @@ document.addEventListener('DOMContentLoaded', () => {
       learnModalTitle.textContent = isHi ? article.titleHi : article.titleEn;
     }
     if (learnModalKicker) {
-      learnModalKicker.textContent = isHi ? "GrowKnow निवेशक शिक्षा" : "GrowKnow Investor Education";
+      learnModalKicker.textContent = isHi ? "BlueRay Wealth निवेशक शिक्षा" : "BlueRay Wealth Investor Education";
     }
 
     if (learnModalContent) {

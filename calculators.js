@@ -762,7 +762,7 @@
   }
 
   // Public Interface for External Calls
-  window.GrowKnowCalc = {
+  window.BlueRayCalc = {
     refreshAll: function () {
       updateRetirement();
       updateEducation();
@@ -796,6 +796,7 @@
       }
     }
   };
+  window.GrowKnowCalc = window.BlueRayCalc;
 
   // Initialization
   document.addEventListener('DOMContentLoaded', () => {
