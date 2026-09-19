@@ -1037,7 +1037,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (hasError) return;
 
-      // Simulated clean frontend lead submission hook
+      // Capture all lead details
+      const emailField = document.getElementById('lead-email');
+      const typeField = document.getElementById('lead-type');
+      const goalField = document.getElementById('lead-goal');
+      const amountField = document.getElementById('lead-amount');
+      const methodField = document.getElementById('lead-method');
+      const msgField = document.getElementById('lead-msg');
+
+      const leadData = {
+        name: name.value.trim(),
+        mobile: mobile.value.trim(),
+        email: emailField ? emailField.value.trim() : '',
+        city: city.value.trim(),
+        investorType: typeField ? typeField.value : 'Salaried',
+        goal: goalField ? goalField.value : 'Wealth Creation',
+        amount: amountField ? amountField.value : '₹5,000 - ₹15,000 / mo SIP',
+        method: methodField ? methodField.value : 'WhatsApp',
+        message: msgField ? msgField.value.trim() : '',
+        source: 'Consultation Modal'
+      };
+
+      // Dispatch to LeadsManager: saves to Admin Portal and sends Email notification
+      if (window.LeadsManager) {
+        const savedLead = window.LeadsManager.addLead(leadData);
+        
+        // Update direct WhatsApp button on success card with full lead details
+        const waUrl = window.LeadsManager.getWhatsAppUrl(savedLead);
+        const modalWaBtn = document.querySelector('#modal-success .btn-whatsapp, #lead-modal .btn-whatsapp');
+        if (modalWaBtn) {
+          modalWaBtn.setAttribute('href', waUrl);
+        }
+      }
+
       leadModalForm.style.display = 'none';
       if (leadSuccess) {
         leadSuccess.style.display = 'block';
@@ -1157,6 +1189,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (userNameEl) userNameEl.textContent = name.value.trim();
       if (contactMethodEl) contactMethodEl.textContent = method;
+
+      // Capture and dispatch portfolio review lead
+      if (window.LeadsManager) {
+        const reviewLead = window.LeadsManager.addLead({
+          name: name.value.trim(),
+          mobile: mobile.value.trim(),
+          email: email.value.trim(),
+          city: city.value.trim(),
+          investorType: `Age: ${age.value} • ${occ.value}`,
+          goal: goal.value,
+          amount: horizon.value,
+          method: method,
+          message: 'Portfolio Review Request',
+          source: 'Portfolio Review Form'
+        });
+
+        const reviewWaBtn = document.querySelector('#review-success-state .btn-whatsapp');
+        if (reviewWaBtn) {
+          reviewWaBtn.setAttribute('href', window.LeadsManager.getWhatsAppUrl(reviewLead));
+        }
+      }
 
       reviewForm.style.display = 'none';
       if (reviewSuccessState) {

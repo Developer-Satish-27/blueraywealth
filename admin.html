@@ -1,0 +1,873 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueRay Wealth - Admin Portal & Lead Management</title>
+  <link rel="icon" type="image/jpeg" href="blueray-wealth-logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0F2C59;
+      --primary-dark: #0A1C38;
+      --primary-light: #1E3E62;
+      --accent: #D4AF37;
+      --accent-hover: #C59B27;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --info: #3B82F6;
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --radius-sm: 6px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Auth Screen */
+    #auth-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 20%, #1e3e62, #0a1c38);
+      padding: 20px;
+    }
+    .auth-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 420px;
+      padding: 36px 32px;
+      text-align: center;
+    }
+    .auth-logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
+      object-fit: cover;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .auth-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+    .auth-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .pin-input {
+      width: 100%;
+      font-size: 1.5rem;
+      letter-spacing: 8px;
+      text-align: center;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      outline: none;
+      transition: all 0.2s;
+      margin-bottom: 16px;
+    }
+    .pin-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(15, 44, 89, 0.12);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--primary); color: white; width: 100%; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-accent { background: var(--accent); color: #000; font-weight: 700; }
+    .btn-accent:hover { background: var(--accent-hover); }
+    .btn-sm { padding: 6px 12px; font-size: 0.82rem; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: #f1f5f9; }
+    .btn-danger { background: #fee2e2; color: #dc2626; }
+    .btn-danger:hover { background: #fecaca; }
+    .btn-success { background: #dcfce7; color: #15803d; }
+    .btn-success:hover { background: #bbf7d0; }
+    .btn-whatsapp { background: #25D366; color: white; }
+    .btn-whatsapp:hover { background: #20BA56; }
+
+    /* Admin Shell */
+    #admin-shell { display: none; }
+    header.admin-header {
+      background: var(--primary);
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-group img {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+    }
+    .brand-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .brand-tag {
+      font-size: 0.75rem;
+      background: rgba(255,255,255,0.15);
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 8px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Navigation Tabs */
+    .nav-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      gap: 8px;
+    }
+    .nav-tab {
+      padding: 14px 18px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      background: none;
+      border-top: none; border-left: none; border-right: none;
+      transition: all 0.2s;
+    }
+    .nav-tab:hover { color: var(--primary); }
+    .nav-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Main Container */
+    .admin-main {
+      max-width: 1240px;
+      margin: 28px auto;
+      padding: 0 20px;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: var(--surface);
+      padding: 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .metric-title { font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+    .metric-value { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2rem; font-weight: 800; color: var(--primary-dark); }
+    .metric-sub { font-size: 0.82rem; color: var(--success); font-weight: 500; }
+
+    /* Action Toolbar */
+    .toolbar {
+      background: var(--surface);
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      background: #FAFAFA;
+    }
+    .search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      margin-left: 8px;
+      font-size: 0.9rem;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .filter-select {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      outline: none;
+      background: var(--surface);
+    }
+
+    /* Leads Table */
+    .leads-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .table-responsive {
+      overflow-x: auto;
+      width: 100%;
+    }
+    table.leads-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    table.leads-table th {
+      background: #F1F5F9;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    table.leads-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    table.leads-table tr:hover {
+      background: #F8FAFC;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    .badge-new { background: #DBEAFE; color: #1D4ED8; }
+    .badge-contacted { background: #FEF3C7; color: #B45309; }
+    .badge-converted { background: #DCFCE7; color: #15803D; }
+    .badge-archived { background: #F1F5F9; color: #64748B; }
+
+    /* Settings Panel */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .settings-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .settings-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .settings-card-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.1);
+    }
+
+    /* Toast Notification */
+    #admin-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--primary-dark);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: none;
+      z-index: 1000;
+      animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state svg { width: 48px; height: 48px; stroke: #CBD5E1; margin-bottom: 12px; }
+
+    @media (max-width: 768px) {
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .filter-group { flex-wrap: wrap; }
+      .header-actions span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen">
+    <div class="auth-card">
+      <img src="blueray-wealth-logo.jpg" alt="BlueRay Wealth" class="auth-logo">
+      <h2 class="auth-title">BlueRay Wealth Portal</h2>
+      <p class="auth-subtitle">Suresh Saini (ARN-347947) • Admin Dashboard</p>
+      
+      <form id="auth-form" onsubmit="return handleLogin(event);">
+        <label for="admin-pin-input" class="form-label" style="text-align:center;">Enter 4-Digit Security PIN</label>
+        <input type="password" id="admin-pin-input" class="pin-input" maxlength="8" placeholder="••••" autofocus required>
+        <button type="submit" class="btn btn-primary" id="login-btn">Unlock Dashboard</button>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:14px;">
+          Default PIN is <strong>2710</strong>. You can change this inside Settings.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN SHELL -->
+  <div id="admin-shell">
+    
+    <!-- Top Header -->
+    <header class="admin-header">
+      <div class="brand-group">
+        <img src="blueray-wealth-logo.jpg" alt="Logo">
+        <div>
+          <span class="brand-title">BlueRay Wealth</span>
+          <span class="brand-tag">Admin Backend</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" target="_blank" class="btn btn-sm btn-accent" style="text-decoration:none;">
+          <span>🌐 View Live Website</span>
+        </a>
+        <button onclick="handleLogout()" class="btn btn-sm btn-outline" style="color:white; border-color:rgba(255,255,255,0.3);">
+          <span>Logout</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-bar">
+      <button class="nav-tab active" onclick="switchTab('leads')" id="tab-btn-leads">
+        📥 Leads & Inquiries <span id="nav-leads-badge" style="background:#DBEAFE; color:#1D4ED8; font-size:0.75rem; padding:2px 7px; border-radius:10px; margin-left:4px;">0</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('settings')" id="tab-btn-settings">
+        ⚙️ Personal Details & Form Settings
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      
+      <!-- ================= SECTION: LEADS INBOX ================= -->
+      <section id="section-leads">
+        
+        <!-- Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-title">Total Inquiries</span>
+            <span class="metric-value" id="metric-total">0</span>
+            <span class="metric-sub">Across all website forms</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-title">New Inquiries</span>
+            <span class="metric-value" id="metric-new" style="color:#1D4ED8;">0</span>
+            <span class="metric-sub">Awaiting your response</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-title">Contacted</span>
+            <span class="metric-value" id="metric-contacted" style="color:#B45309;">0</span>
+            <span class="metric-sub">In communication</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-title">Active Goals</span>
+            <span class="metric-value" id="metric-goals" style="color:#15803D;">0</span>
+            <span class="metric-sub">Goal planning requests</span>
+          </div>
+        </div>
+
+        <!-- Action Toolbar -->
+        <div class="toolbar">
+          <div class="search-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="leads-search" placeholder="Search by name, mobile, email, city..." oninput="renderLeadsTable()">
+          </div>
+
+          <div class="filter-group">
+            <select id="status-filter" class="filter-select" onchange="renderLeadsTable()">
+              <option value="all">All Statuses</option>
+              <option value="new">New Only</option>
+              <option value="contacted">Contacted</option>
+              <option value="converted">Converted</option>
+              <option value="archived">Archived</option>
+            </select>
+
+            <button onclick="LeadsManager.exportToCSV()" class="btn btn-sm btn-outline">
+              📊 Export to Excel/CSV
+            </button>
+
+            <button onclick="addDemoLead()" class="btn btn-sm btn-outline" title="Add a sample lead to test">
+              + Test Lead
+            </button>
+          </div>
+        </div>
+
+        <!-- Leads Table -->
+        <div class="leads-card">
+          <div class="table-responsive">
+            <table class="leads-table">
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Client Details</th>
+                  <th>City</th>
+                  <th>Goal & Amount</th>
+                  <th>Message / Request</th>
+                  <th>Status</th>
+                  <th>Quick Actions</th>
+                </tr>
+              </thead>
+              <tbody id="leads-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+          <div id="leads-empty" class="empty-state" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+            <h3>No inquiries found</h3>
+            <p>Form submissions from your website will appear here in real time.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= SECTION: SETTINGS ================= -->
+      <section id="section-settings" style="display:none;">
+        <div class="settings-grid">
+          
+          <!-- Personal Profile Details -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <span style="font-size:1.4rem;">👤</span>
+              <h3 class="settings-card-title">Personal & Professional Info</h3>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="cfg-name">Distributor Name</label>
+              <input type="text" id="cfg-name" class="form-control" placeholder="e.g. Suresh Saini">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-arn">AMFI ARN Number</label>
+              <input type="text" id="cfg-arn" class="form-control" placeholder="e.g. ARN-347947">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-partner">Platform Partner</label>
+              <input type="text" id="cfg-partner" class="form-control" placeholder="e.g. NJ Wealth">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-city">City & State</label>
+              <input type="text" id="cfg-city" class="form-control" placeholder="e.g. Jaipur, Rajasthan">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-address">Office Address</label>
+              <textarea id="cfg-address" rows="2" class="form-control" placeholder="Full office address"></textarea>
+            </div>
+          </div>
+
+          <!-- Contact & Notification Endpoints (Email & WhatsApp) -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <span style="font-size:1.4rem;">🔔</span>
+              <h3 class="settings-card-title">Lead Delivery (Email & WhatsApp)</h3>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-phone">Calling Phone Number</label>
+              <input type="text" id="cfg-phone" class="form-control" placeholder="e.g. +91 9923861051">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-whatsapp">WhatsApp Number (with 91 country code)</label>
+              <input type="text" id="cfg-whatsapp" class="form-control" placeholder="e.g. 919923861051">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Used for one-click chat links. Do not include spaces or '+'.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-email">Notification Email (Receive Inquiries)</label>
+              <input type="email" id="cfg-email" class="form-control" placeholder="e.g. blueraywealth0007@gmail.com">
+              <span style="font-size:0.75rem; color:var(--text-muted);">All new lead alerts are dispatched to this inbox.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-web3forms">Web3Forms Access Key (Optional)</label>
+              <input type="text" id="cfg-web3forms" class="form-control" placeholder="Optional access key (leave blank to use FormSubmit)">
+            </div>
+          </div>
+
+          <!-- Security Settings -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <span style="font-size:1.4rem;">🔒</span>
+              <h3 class="settings-card-title">Portal Security</h3>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-pin">Admin Security PIN</label>
+              <input type="text" id="cfg-pin" class="form-control" placeholder="4 to 8 digit PIN">
+              <span style="font-size:0.75rem; color:var(--text-muted);">This PIN protects your Admin Dashboard.</span>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <button onclick="saveSettings()" class="btn btn-accent" style="width:100%;">
+                💾 Save All Changes
+              </button>
+              <button onclick="resetSettings()" class="btn btn-outline" style="width:100%; margin-top:8px;">
+                ↺ Reset to Defaults
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="admin-toast"></div>
+
+  <!-- Include Core Modules -->
+  <script src="site-config.js"></script>
+  <script src="leads-manager.js"></script>
+  <script>
+    // Authentication State
+    const AUTH_SESSION_KEY = 'blueray_admin_authenticated';
+
+    function initAuth() {
+      if (sessionStorage.getItem(AUTH_SESSION_KEY) === 'true') {
+        showAdminShell();
+      } else {
+        document.getElementById('auth-screen').style.display = 'flex';
+        document.getElementById('admin-shell').style.display = 'none';
+      }
+    }
+
+    function handleLogin(e) {
+      if (e) e.preventDefault();
+      const enteredPin = document.getElementById('admin-pin-input').value.trim();
+      const cfg = SiteConfig.get();
+      const correctPin = cfg.adminPin || '2710';
+
+      if (enteredPin === correctPin) {
+        sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
+        showAdminShell();
+        toast('Logged in successfully!');
+      } else {
+        alert('Invalid Security PIN. Please try again.');
+        document.getElementById('admin-pin-input').value = '';
+        document.getElementById('admin-pin-input').focus();
+      }
+      return false;
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem(AUTH_SESSION_KEY);
+      document.getElementById('admin-pin-input').value = '';
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.getElementById('admin-shell').style.display = 'none';
+      toast('Logged out.');
+    }
+
+    function showAdminShell() {
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('admin-shell').style.display = 'block';
+      renderLeadsTable();
+      populateSettingsForm();
+    }
+
+    // Navigation Tabs
+    function switchTab(tab) {
+      const isLeads = tab === 'leads';
+      document.getElementById('section-leads').style.display = isLeads ? 'block' : 'none';
+      document.getElementById('section-settings').style.display = isLeads ? 'none' : 'block';
+      document.getElementById('tab-btn-leads').classList.toggle('active', isLeads);
+      document.getElementById('tab-btn-settings').classList.toggle('active', !isLeads);
+      if (isLeads) renderLeadsTable();
+    }
+
+    // Toast Utility
+    function toast(msg) {
+      const el = document.getElementById('admin-toast');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 3000);
+    }
+
+    // Render Leads Table
+    function renderLeadsTable() {
+      const tbody = document.getElementById('leads-tbody');
+      const empty = document.getElementById('leads-empty');
+      const leads = LeadsManager.getAll();
+      const search = (document.getElementById('leads-search').value || '').toLowerCase();
+      const statusFilter = document.getElementById('status-filter').value;
+
+      // Update Metrics
+      document.getElementById('metric-total').textContent = leads.length;
+      document.getElementById('metric-new').textContent = leads.filter(l => l.status === 'new').length;
+      document.getElementById('metric-contacted').textContent = leads.filter(l => l.status === 'contacted').length;
+      document.getElementById('metric-goals').textContent = leads.filter(l => l.goal && l.goal !== 'N/A').length;
+      document.getElementById('nav-leads-badge').textContent = leads.filter(l => l.status === 'new').length;
+
+      // Filter Leads
+      const filtered = leads.filter(l => {
+        const matchesStatus = (statusFilter === 'all') || (l.status === statusFilter);
+        const textBlob = `${l.name} ${l.mobile} ${l.email} ${l.city} ${l.goal} ${l.message}`.toLowerCase();
+        const matchesSearch = !search || textBlob.includes(search);
+        return matchesStatus && matchesSearch;
+      });
+
+      if (!filtered.length) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = filtered.map(lead => {
+        const cleanMobile = (lead.mobile || '').replace(/[^\d]/g, '');
+        const waMsg = encodeURIComponent(`Hello ${lead.name}, this is Suresh Saini from BlueRay Wealth regarding your mutual fund consultation request.`);
+        const waLink = `https://wa.me/91${cleanMobile}?text=${waMsg}`;
+        const telLink = `tel:+91${cleanMobile}`;
+        const mailLink = lead.email ? `mailto:${lead.email}?subject=BlueRay Wealth Consultation` : '#';
+
+        return `
+          <tr>
+            <td style="white-space:nowrap;">
+              <span style="font-weight:600; color:var(--text);">${lead.createdDisplay || 'Just now'}</span>
+              <br><span style="font-size:0.75rem; color:var(--text-muted);">${lead.source || 'Website Modal'}</span>
+            </td>
+            <td>
+              <strong style="color:var(--primary);">${escapeHtml(lead.name || 'Anonymous')}</strong>
+              <div style="font-size:0.82rem; margin-top:2px;">
+                <a href="${telLink}" style="color:inherit; text-decoration:none; font-weight:500;">📱 +91 ${lead.mobile || 'N/A'}</a>
+                ${lead.email ? `<br><a href="${mailLink}" style="color:var(--text-muted); text-decoration:none;">✉️ ${escapeHtml(lead.email)}</a>` : ''}
+              </div>
+            </td>
+            <td>${escapeHtml(lead.city || 'N/A')}</td>
+            <td>
+              <span style="font-weight:600; color:var(--text);">${escapeHtml(lead.goal || 'General Inquiry')}</span>
+              <br><span style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(lead.amount || '')}</span>
+            </td>
+            <td style="max-width:240px;">
+              <div style="font-size:0.85rem; color:var(--text); line-height:1.4;">
+                ${escapeHtml(lead.message || 'No additional note')}
+              </div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">
+                Contact via: <strong>${escapeHtml(lead.method || 'WhatsApp')}</strong>
+              </div>
+            </td>
+            <td>
+              <select class="filter-select" style="padding:4px 8px; font-size:0.8rem;" onchange="changeStatus('${lead.id}', this.value)">
+                <option value="new" ${lead.status === 'new' ? 'selected' : ''}>🔵 New</option>
+                <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>🟡 Contacted</option>
+                <option value="converted" ${lead.status === 'converted' ? 'selected' : ''}>🟢 Converted</option>
+                <option value="archived" ${lead.status === 'archived' ? 'selected' : ''}>⚪ Archived</option>
+              </select>
+            </td>
+            <td style="white-space:nowrap;">
+              <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-whatsapp" style="text-decoration:none; margin-right:4px;">
+                💬 WhatsApp
+              </a>
+              <a href="${telLink}" class="btn btn-sm btn-outline" style="text-decoration:none; margin-right:4px;">
+                📞 Call
+              </a>
+              <button onclick="removeLead('${lead.id}')" class="btn btn-sm btn-danger" title="Delete lead">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, function (m) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+      });
+    }
+
+    function changeStatus(id, newStatus) {
+      LeadsManager.updateStatus(id, newStatus);
+      toast('Status updated');
+      renderLeadsTable();
+    }
+
+    function removeLead(id) {
+      if (confirm('Are you sure you want to delete this inquiry record?')) {
+        LeadsManager.deleteLead(id);
+        toast('Inquiry deleted');
+        renderLeadsTable();
+      }
+    }
+
+    function addDemoLead() {
+      LeadsManager.addLead({
+        name: 'Satish Saini',
+        mobile: '6367461403',
+        email: 'satish27102004@gmail.com',
+        city: 'Jaipur',
+        investorType: 'Salaried Professional',
+        goal: 'Wealth Creation',
+        amount: '₹5,000 - ₹15,000 / month SIP',
+        method: 'WhatsApp',
+        message: 'Interested in portfolio guidance and long term SIPs.',
+        source: 'Demo Test'
+      });
+      toast('Test lead added!');
+      renderLeadsTable();
+    }
+
+    // Populate Settings Form from SiteConfig
+    function populateSettingsForm() {
+      const cfg = SiteConfig.get();
+      document.getElementById('cfg-name').value = cfg.distributorName || '';
+      document.getElementById('cfg-arn').value = cfg.arnNumber || '';
+      document.getElementById('cfg-partner').value = cfg.partnerPlatform || '';
+      document.getElementById('cfg-city').value = cfg.city || '';
+      document.getElementById('cfg-address').value = cfg.officeAddress || '';
+      document.getElementById('cfg-phone').value = cfg.phone || '';
+      document.getElementById('cfg-whatsapp').value = cfg.whatsappNumber || '';
+      document.getElementById('cfg-email').value = cfg.notificationEmail || '';
+      document.getElementById('cfg-web3forms').value = cfg.web3FormsKey || '';
+      document.getElementById('cfg-pin').value = cfg.adminPin || '2710';
+    }
+
+    function saveSettings() {
+      const newCfg = {
+        distributorName: document.getElementById('cfg-name').value.trim(),
+        arnNumber: document.getElementById('cfg-arn').value.trim(),
+        partnerPlatform: document.getElementById('cfg-partner').value.trim(),
+        city: document.getElementById('cfg-city').value.trim(),
+        officeAddress: document.getElementById('cfg-address').value.trim(),
+        phone: document.getElementById('cfg-phone').value.trim(),
+        whatsappNumber: document.getElementById('cfg-whatsapp').value.trim(),
+        notificationEmail: document.getElementById('cfg-email').value.trim(),
+        web3FormsKey: document.getElementById('cfg-web3forms').value.trim(),
+        adminPin: document.getElementById('cfg-pin').value.trim() || '2710'
+      };
+
+      SiteConfig.save(newCfg);
+      toast('Settings saved successfully!');
+    }
+
+    function resetSettings() {
+      if (confirm('Reset all personal details and settings to default values?')) {
+        SiteConfig.reset();
+        populateSettingsForm();
+        toast('Reset to default configuration');
+      }
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', initAuth);
+  </script>
+</body>
+</html>
