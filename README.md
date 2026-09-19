@@ -8,11 +8,11 @@ A modern, responsive, and bilingual investor education website and lead-generati
 - Responsive Light and Dark Theme
 - Regulatory compliance with AMFI ARN 347947 and NJ Wealth partner transparency
 
-## Live Website on GitHub Pages
-1. Push this repository to GitHub.
-2. Go to Settings > Pages.
-3. Select Branch: main, Folder: / (root).
-4. Click Save. Your website will be live at: https://<username>.github.io/<repo-name>/
+## Live Website
+The website is published at **https://blueraywealth.com** (hosted via GitHub Pages).
+- Custom Domain: `blueraywealth.com` (and `www.blueraywealth.com`)
+- Apex DNS: GitHub Pages A Records (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`)
+- Subdomain `www`: CNAME `developer-satish-27.github.io`
 
 ## Local Preview
 Open index.html directly in any web browser.
