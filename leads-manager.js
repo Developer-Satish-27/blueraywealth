@@ -1,17 +1,17 @@
 ﻿/**
- * BlueRay Wealth - Lead Capture & Management Engine
- * Handles lead persistence, Email dispatch, WhatsApp link generation, and CSV export.
+ * BlueRay Wealth - Lead Capture & Notification Engine
+ * Accurately dispatches leads to Email (FormSubmit) and generates WhatsApp links.
  */
 (function (window) {
   'use strict';
 
-  const STORAGE_KEY = 'blueray_leads_db';
+  var STORAGE_KEY = 'blueray_leads_db';
 
-  const LeadsManager = {
+  var LeadsManager = {
     // Retrieve all leads
     getAll: function () {
       try {
-        const stored = localStorage.getItem(STORAGE_KEY);
+        var stored = localStorage.getItem(STORAGE_KEY);
         return stored ? JSON.parse(stored) : [];
       } catch (e) {
         console.error('Failed to load leads from storage:', e);
@@ -21,21 +21,22 @@
 
     // Save a new lead
     addLead: function (leadData) {
-      const leads = this.getAll();
-      const newLead = Object.assign({
-        id: 'lead_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-        createdAt: new Date().toISOString(),
-        createdDisplay: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-        status: 'new', // new, contacted, converted, archived
+      var leads = this.getAll();
+      var now = new Date();
+      var newLead = Object.assign({
+        id: 'lead_' + now.getTime() + '_' + Math.random().toString(36).substr(2, 5),
+        createdAt: now.toISOString(),
+        createdDisplay: now.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+        status: 'new',
         notes: ''
       }, leadData);
 
-      leads.unshift(newLead); // Latest first
+      leads.unshift(newLead);
 
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
       } catch (e) {
-        console.error('Failed to save lead to localStorage:', e);
+        console.warn('Storage quota note:', e);
       }
 
       // Automatically dispatch email notification in background
@@ -46,8 +47,8 @@
 
     // Update lead status
     updateStatus: function (id, newStatus) {
-      const leads = this.getAll();
-      const idx = leads.findIndex(l => l.id === id);
+      var leads = this.getAll();
+      var idx = leads.findIndex(function (l) { return l.id === id; });
       if (idx !== -1) {
         leads[idx].status = newStatus;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
@@ -56,51 +57,38 @@
       return false;
     },
 
-    // Update admin notes on lead
-    updateNotes: function (id, notes) {
-      const leads = this.getAll();
-      const idx = leads.findIndex(l => l.id === id);
-      if (idx !== -1) {
-        leads[idx].notes = notes;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
-        return true;
-      }
-      return false;
-    },
-
     // Delete a lead
     deleteLead: function (id) {
-      let leads = this.getAll();
-      leads = leads.filter(l => l.id !== id);
+      var leads = this.getAll().filter(function (l) { return l.id !== id; });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
       return true;
     },
 
     // Build pre-filled WhatsApp message URL
     getWhatsAppUrl: function (lead) {
-      const cfg = window.SiteConfig ? window.SiteConfig.get() : { whatsappNumber: '919923861051' };
-      const phone = cfg.whatsappNumber.replace(/[^\d]/g, '');
+      var cfg = window.SiteConfig ? window.SiteConfig.get() : { whatsappNumber: '919923861051' };
+      var phone = (cfg.whatsappNumber || '919923861051').replace(/[^\d]/g, '');
 
-      let msg = *New Lead / Consultation Request*\n;
-      msg += 👤 *Name:* \n;
-      msg += 📱 *Mobile:* +91 \n;
-      if (lead.email) msg += ✉️ *Email:* \n;
-      if (lead.city) msg += 📍 *City:* \n;
-      if (lead.investorType) msg += 💼 *Investor Type:* \n;
-      if (lead.goal) msg += 🎯 *Goal:* \n;
-      if (lead.amount) msg += 💰 *Approx Amount:* \n;
-      if (lead.method) msg += 📞 *Preferred Contact:* \n;
-      if (lead.message) msg += 💬 *Message:* \n;
-      msg += 🕒 *Received:* \n;
-      msg += \n_BlueRay Wealth - Trust • Guidance • Growth_;
+      var msg = '*New Consultation Request - BlueRay Wealth*\n';
+      msg += '👤 *Name:* ' + (lead.name || 'N/A') + '\n';
+      msg += '📱 *Mobile:* +91 ' + (lead.mobile || 'N/A') + '\n';
+      if (lead.email) msg += '✉️ *Email:* ' + lead.email + '\n';
+      if (lead.city) msg += '📍 *City:* ' + lead.city + '\n';
+      if (lead.investorType) msg += '💼 *Investor Type:* ' + lead.investorType + '\n';
+      if (lead.goal) msg += '🎯 *Goal:* ' + lead.goal + '\n';
+      if (lead.amount) msg += '💰 *Approx Amount:* ' + lead.amount + '\n';
+      if (lead.method) msg += '📞 *Preferred Contact:* ' + lead.method + '\n';
+      if (lead.message) msg += '💬 *Message:* ' + lead.message + '\n';
+      msg += '🕒 *Time:* ' + (lead.createdDisplay || new Date().toLocaleString()) + '\n';
+      msg += '\n_BlueRay Wealth - Trust • Guidance • Growth_';
 
-      return https://wa.me/?text=;
+      return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
     },
 
     // Dispatch email to configured recipient (blueraywealth0007@gmail.com)
     dispatchEmailNotification: function (lead) {
-      const cfg = window.SiteConfig ? window.SiteConfig.get() : { notificationEmail: 'blueraywealth0007@gmail.com' };
-      const targetEmail = cfg.notificationEmail || 'blueraywealth0007@gmail.com';
+      var cfg = window.SiteConfig ? window.SiteConfig.get() : { notificationEmail: 'blueraywealth0007@gmail.com' };
+      var targetEmail = cfg.notificationEmail || 'blueraywealth0007@gmail.com';
 
       // 1. If Web3Forms access key is configured, use Web3Forms API
       if (cfg.web3FormsKey) {
@@ -109,10 +97,10 @@
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
             access_key: cfg.web3FormsKey,
-            subject: New BlueRay Wealth Lead:  (),
+            subject: 'New BlueRay Wealth Lead: ' + lead.name + ' (' + lead.mobile + ')',
             from_name: 'BlueRay Wealth Portal',
             name: lead.name,
-            mobile: lead.mobile,
+            mobile: '+91 ' + lead.mobile,
             email: lead.email || 'Not Provided',
             city: lead.city || 'Not Provided',
             investor_type: lead.investorType || 'N/A',
@@ -122,14 +110,14 @@
             message: lead.message || 'No additional message',
             timestamp: lead.createdDisplay
           })
-        }).catch(err => console.warn('Web3Forms dispatch error:', err));
+        }).catch(function (err) { console.warn('Web3Forms dispatch note:', err); });
         return;
       }
 
       // 2. Default: FormSubmit.co AJAX delivery (Free, direct to email)
-      const formPayload = {
+      var formPayload = {
         name: lead.name,
-        mobile: +91 ,
+        mobile: '+91 ' + lead.mobile,
         email: lead.email || 'N/A',
         city: lead.city || 'N/A',
         goal: lead.goal || 'N/A',
@@ -138,12 +126,12 @@
         preferred_contact: lead.method || 'N/A',
         message: lead.message || 'No note',
         source: lead.source || 'Website Modal',
-        _subject: New Lead:  (+91 ) - BlueRay Wealth,
+        _subject: 'New Lead: ' + lead.name + ' (+91 ' + lead.mobile + ') - BlueRay Wealth',
         _template: 'table',
         _captcha: 'false'
       };
 
-      fetch(https://formsubmit.co/ajax/, {
+      fetch('https://formsubmit.co/ajax/' + encodeURIComponent(targetEmail), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -151,47 +139,49 @@
         },
         body: JSON.stringify(formPayload)
       })
-      .then(res => res.json())
-      .then(data => {
-        console.log('FormSubmit notification status:', data);
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        console.log('FormSubmit notification response:', data);
       })
-      .catch(err => {
-        console.warn('FormSubmit background dispatch note:', err);
+      .catch(function (err) {
+        console.warn('FormSubmit dispatch note:', err);
       });
     },
 
     // Export all leads to CSV
     exportToCSV: function () {
-      const leads = this.getAll();
+      var leads = this.getAll();
       if (!leads.length) {
         alert('No leads available to export.');
         return;
       }
 
-      const headers = ['ID', 'Date & Time', 'Status', 'Name', 'Mobile', 'Email', 'City', 'Investor Type', 'Goal', 'Investment Amount', 'Preferred Contact', 'Message', 'Notes'];
+      var headers = ['ID', 'Date & Time', 'Status', 'Name', 'Mobile', 'Email', 'City', 'Investor Type', 'Goal', 'Investment Amount', 'Preferred Contact', 'Message', 'Notes'];
       
-      const rows = leads.map(l => [
-        "",
-        "",
-        "",
-        "",
-        "'+91 ",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        ""
-      ]);
+      var rows = leads.map(function (l) {
+        return [
+          '"' + l.id + '"',
+          '"' + (l.createdDisplay || l.createdAt) + '"',
+          '"' + l.status + '"',
+          '"' + (l.name || '').replace(/"/g, '""') + '"',
+          '"+91 ' + (l.mobile || '') + '"',
+          '"' + (l.email || '').replace(/"/g, '""') + '"',
+          '"' + (l.city || '').replace(/"/g, '""') + '"',
+          '"' + (l.investorType || '').replace(/"/g, '""') + '"',
+          '"' + (l.goal || '').replace(/"/g, '""') + '"',
+          '"' + (l.amount || '').replace(/"/g, '""') + '"',
+          '"' + (l.method || '').replace(/"/g, '""') + '"',
+          '"' + (l.message || '').replace(/"/g, '""') + '"',
+          '"' + (l.notes || '').replace(/"/g, '""') + '"'
+        ];
+      });
 
-      const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      var csvContent = '\uFEFF' + [headers.join(',')].concat(rows.map(function (r) { return r.join(','); })).join('\r\n');
+      var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
       link.setAttribute('href', url);
-      link.setAttribute('download', lueray_leads_.csv);
+      link.setAttribute('download', 'blueray_leads_' + new Date().toISOString().slice(0, 10) + '.csv');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

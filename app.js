@@ -1059,11 +1059,12 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       // Dispatch to LeadsManager: saves to Admin Portal and sends Email notification
+      let waUrl = '';
       if (window.LeadsManager) {
         const savedLead = window.LeadsManager.addLead(leadData);
+        waUrl = window.LeadsManager.getWhatsAppUrl(savedLead);
         
         // Update direct WhatsApp button on success card with full lead details
-        const waUrl = window.LeadsManager.getWhatsAppUrl(savedLead);
         const modalWaBtn = document.querySelector('#modal-success .btn-whatsapp, #lead-modal .btn-whatsapp');
         if (modalWaBtn) {
           modalWaBtn.setAttribute('href', waUrl);
@@ -1074,7 +1075,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (leadSuccess) {
         leadSuccess.style.display = 'block';
       }
-      showToast('Enquiry received! Suresh Saini will connect with you soon.');
+      showToast('Enquiry received! Connecting to WhatsApp...');
+
+      // Auto-launch WhatsApp directly with pre-filled inquiry details
+      if (waUrl) {
+        window.open(waUrl, '_blank');
+      }
     });
   }
 
@@ -1191,6 +1197,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (contactMethodEl) contactMethodEl.textContent = method;
 
       // Capture and dispatch portfolio review lead
+      let reviewWaUrl = '';
       if (window.LeadsManager) {
         const reviewLead = window.LeadsManager.addLead({
           name: name.value.trim(),
@@ -1205,9 +1212,10 @@ document.addEventListener('DOMContentLoaded', () => {
           source: 'Portfolio Review Form'
         });
 
+        reviewWaUrl = window.LeadsManager.getWhatsAppUrl(reviewLead);
         const reviewWaBtn = document.querySelector('#review-success-state .btn-whatsapp');
         if (reviewWaBtn) {
-          reviewWaBtn.setAttribute('href', window.LeadsManager.getWhatsAppUrl(reviewLead));
+          reviewWaBtn.setAttribute('href', reviewWaUrl);
         }
       }
 
@@ -1216,7 +1224,11 @@ document.addEventListener('DOMContentLoaded', () => {
         reviewSuccessState.style.display = 'block';
       }
 
-      showToast('Portfolio review request submitted successfully!');
+      showToast('Portfolio review request submitted! Connecting to WhatsApp...');
+
+      if (reviewWaUrl) {
+        window.open(reviewWaUrl, '_blank');
+      }
     });
   }
 
