@@ -157,6 +157,9 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 body {
@@ -168,6 +171,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   transition: background-color var(--transition-normal), color var(--transition-normal);
   overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
 }
 
 /* Skip link for accessibility */
@@ -195,10 +201,14 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
   line-height: 1.25;
   letter-spacing: -0.02em;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 p {
   color: var(--text-secondary);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 a {
@@ -210,6 +220,7 @@ a {
 button, input, select, textarea {
   font-family: inherit;
   font-size: 1rem;
+  max-width: 100%;
 }
 
 button {
@@ -220,6 +231,7 @@ button {
 
 img, svg {
   vertical-align: middle;
+  max-width: 100%;
 }
 
 /* Layout Utilities */
@@ -660,8 +672,9 @@ img, svg {
   display: none;
   position: fixed;
   top: 0;
-  right: -320px;
-  width: 300px;
+  right: -340px;
+  width: min(300px, 86vw);
+  max-width: 100vw;
   height: 100vh;
   background-color: var(--bg-surface);
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
@@ -1291,7 +1304,7 @@ img, svg {
    -------------------------------------------------------------------------- */
 .solutions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: var(--space-6);
 }
 
@@ -1386,12 +1399,19 @@ img, svg {
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-6);
 }
+.sip-details-grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
 
 .sip-info-card {
   background-color: var(--bg-surface-muted);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .sip-card-head {
@@ -1426,6 +1446,10 @@ img, svg {
 /* SIP vs Lump Sum Comparison Table */
 .comparison-table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .sip-comp-table {
   width: 100%;
@@ -2656,7 +2680,7 @@ img, svg {
 
 .learning-articles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr));
   gap: var(--space-6);
   margin-top: var(--space-8);
 }
@@ -3029,32 +3053,75 @@ img, svg {
    -------------------------------------------------------------------------- */
 .floating-whatsapp-wrap {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 9990;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9995;
 }
 
 .whatsapp-fab {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
   background-color: #25D366;
   color: #FFFFFF;
-  padding: 12px 18px;
-  border-radius: var(--radius-full);
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.45);
   transition: all var(--transition-normal);
   text-decoration: none;
+  position: relative;
 }
+
+.whatsapp-fab svg {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+
 .whatsapp-fab:hover {
-  background-color: #1EBE5D;
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5);
+  background-color: #20BA56;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.55);
 }
+
+.whatsapp-fab:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.whatsapp-fab:focus-visible {
+  outline: 3px solid #10B981;
+  outline-offset: 3px;
+}
+
+/* Tooltip on desktop hover only */
+.whatsapp-fab::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 66px;
+  top: 50%;
+  transform: translateY(-50%) scale(0.9);
+  background: rgba(7, 23, 47, 0.92);
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-md);
+}
+
+.whatsapp-fab:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+/* Hidden by default so it never blocks data/content */
 .fab-label {
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: -0.01em;
+  display: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -3154,116 +3221,596 @@ img, svg {
 }
 
 /* --------------------------------------------------------------------------
-   22. Responsive Breakpoints
+   22. Comprehensive Multi-Device Responsive System
+   Supports: Large Desktop, Laptop, Tablet, Foldable Mobile, and Normal Mobile
    -------------------------------------------------------------------------- */
-@media (max-width: 1024px) {
-  .hero-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-  }
-  .hero-trust-panel {
-    grid-template-columns: 1fr;
-  }
-  .trust-cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .how-it-works-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .categories-grid {
-    grid-template-columns: 1fr;
-  }
-  .calc-grid {
-    grid-template-columns: 1fr;
-  }
-  .nj-features-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .about-grid {
-    grid-template-columns: 1fr;
-  }
-  .footer-top-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
-@media (max-width: 1140px) {
+/* LAPTOPS & INTERMEDIATE DESKTOPS (1024px - 1199px) */
+@media (max-width: 1199px) {
   .nav-links, .nav-cta-btn {
     display: none;
   }
   .mobile-toggle {
     display: block;
   }
-}
-
-@media (min-width: 1141px) and (max-width: 1280px) {
-  .nav-links {
-    gap: 3px;
-  }
-  .nav-link {
-    font-size: 0.81rem;
-    padding: 5px 6px;
-  }
-  .brand-logo {
-    gap: 8px;
-  }
-  .brand-title {
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .trust-cards-grid {
-    grid-template-columns: 1fr;
-  }
-  .mf-flow-diagram-container {
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-  .flow-connector {
-    transform: rotate(90deg);
-    padding: var(--space-2) 0;
-  }
-  .how-it-works-grid {
-    grid-template-columns: 1fr;
-  }
-  .sip-details-grid {
-    grid-template-columns: 1fr;
+  .footer-top-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-8);
   }
   .nj-features-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
-  .form-grid-3, .form-grid-2 {
-    grid-template-columns: 1fr;
-  }
-  .results-kpi-grid {
-    grid-template-columns: 1fr;
-  }
-  .footer-top-grid {
-    grid-template-columns: 1fr;
-  }
-  .footer-bottom-bar {
-    flex-direction: column;
-    text-align: center;
-  }
-  .fab-label {
-    display: none;
-  }
-  .whatsapp-fab {
-    padding: 14px;
+  .trust-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 480px) {
+/* TABLETS (769px - 1024px) */
+@media (max-width: 1024px) {
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  .hero-desc {
+    max-width: 100%;
+  }
+  .hero-trust-panel {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+  }
+  .how-it-works-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sip-details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .calc-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  .life-goal-grid, .quick-tools-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  .about-sidebar {
+    position: static;
+  }
+  .form-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mf-flow-diagram-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+    padding: var(--space-6);
+  }
+  .flow-connector {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-trust-panel {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  .calc-cat-btn {
+    min-width: 160px;
+    padding: 12px 18px;
+  }
+}
+
+/* SMARTPHONES & SMALL TABLETS (<= 768px) */
+@media (max-width: 768px) {
+  /* Container & Spacing (removes large dead space from mobile view) */
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
   .section {
     padding-top: var(--space-10);
     padding-bottom: var(--space-10);
   }
-  .hero-cta-group {
-    flex-direction: column;
+  .section-header {
+    margin-bottom: var(--space-8);
   }
-  .btn-lg {
+  .section-title {
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
+  }
+  .section-subtitle {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  /* Form controls: 16px base font to prevent iOS Safari auto-zoom on focus */
+  button, input, select, textarea {
+    font-size: 16px;
+  }
+
+  /* Top Announcement Bar */
+  .announcement-bar {
+    padding: 6px 0;
+    font-size: 0.75rem;
+    overflow: hidden;
     width: 100%;
+  }
+  .announcement-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    width: 100%;
+  }
+  .badge-arn {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .bar-trust-items {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  /* Header & Navigation */
+  .nav-container {
+    height: 60px;
+    padding-left: 12px;
+    padding-right: 12px;
+    justify-content: space-between;
+  }
+  .brand-logo {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .brand-title {
+    font-size: 1.15rem;
+  }
+  .brand-subtitle {
+    display: none;
+  }
+  .brand-logo-img {
+    width: 34px;
+    height: 34px;
+  }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .toggle-text {
+    display: none;
+  }
+  .btn-control-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .mobile-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* Hero Section Typography */
+  .hero-title {
+    font-size: clamp(1.75rem, 6.8vw, 2.3rem);
+    line-height: 1.2;
+  }
+  .hero-subline {
+    font-size: 1.05rem;
+    line-height: 1.45;
+  }
+
+  /* Multi-column Grids Collapse to Clean 1 Column */
+  .trust-cards-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+  .how-it-works-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .sip-details-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .nj-features-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .form-grid-3, .form-grid-2 {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .results-kpi-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  .footer-top-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  /* Mutual Fund Visual Flowchart (Vertical step flow) */
+  .mf-flow-diagram-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-6) var(--space-4);
+  }
+  .flow-step-node {
+    width: 100%;
+    max-width: 320px;
+    align-items: center;
+    text-align: center;
+  }
+  .flow-node-desc {
+    max-width: 100%;
+  }
+  .flow-connector {
+    display: flex;
+    transform: rotate(90deg);
+    padding: 6px 0;
+  }
+
+  /* Educational Banner & Tables */
+  .sip-edu-banner {
+    padding: var(--space-6) var(--space-5);
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .sip-edu-text {
+    max-width: 100%;
+  }
+  .comparison-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    margin: 0;
+  }
+  .sip-comp-table {
+    width: 100%;
+    min-width: 440px;
+  }
+  .sip-comp-table th, .sip-comp-table td {
+    padding: 8px 6px;
+    font-size: 0.82rem;
+  }
+
+  /* Card Padding Refinement on Mobile */
+  .calc-controls-card, .calc-results-card,
+  .life-goal-output-card, .quick-tool-card,
+  .form-container-card, .about-profile-card,
+  .category-card, .trust-card, .step-card,
+  .solution-card, .sip-info-card, .nj-card,
+  .legal-card {
+    padding: var(--space-5);
+  }
+  .cta-inner-card {
+    padding: var(--space-8) var(--space-5);
+  }
+
+  /* Footer Bottom Bar */
+  .footer-bottom-bar {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  .footer-legal-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* Floating WhatsApp FAB on Mobile */
+  .floating-whatsapp-wrap {
+    bottom: 18px;
+    right: 16px;
+  }
+  .whatsapp-fab {
+    width: 50px;
+    height: 50px;
+  }
+  .whatsapp-fab svg {
+    width: 28px;
+    height: 28px;
+  }
+  .whatsapp-fab::after {
+    display: none !important;
+  }
+
+  /* Page Hero on Subpages */
+  .page-hero {
+    padding: var(--space-8) 0 var(--space-6) 0;
+  }
+}
+
+/* NORMAL MOBILE & FOLDABLE UNFOLDED (<= 540px) */
+@media (max-width: 540px) {
+  /* Prevent Any Text or Button Overflow */
+  .btn {
+    white-space: normal;
+    text-align: center;
+    word-break: normal;
+  }
+  .btn-lg, .hero-cta-group .btn, .cat-card-action .btn,
+  .drawer-btn, .cta-buttons-row .btn, .about-action-group .btn {
+    width: 100%;
+  }
+  .hero-cta-group, .cta-buttons-row, .about-action-group {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* Compact Navbar Action Controls */
+  .toggle-text {
+    display: none;
+  }
+  .btn-control-toggle {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+  .nav-actions {
+    gap: 6px;
+  }
+
+  /* Life Goal Output Card: Stack Required Investments */
+  .req-invest-3col {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .req-invest-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  .inv-box-period {
+    margin-bottom: 0;
+    font-size: 0.82rem;
+  }
+  .inv-box-val {
+    font-size: 1.05rem;
+  }
+  .goal-kpi-amount {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+
+  /* Delay Comparison Card: Stack Boxes */
+  .delay-comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .delay-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  .delay-box-title {
+    margin-bottom: 0;
+  }
+
+  /* Stepper & Calculator Inputs */
+  .calc-cat-nav {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+  .calc-cat-btn {
+    width: 100%;
+    min-width: 100%;
+    padding: 12px 14px;
+  }
+  .calc-goal-subnav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .goal-subnav-btn {
+    padding: 10px 8px;
+    font-size: 0.84rem;
+    gap: 6px;
+    justify-content: center;
+  }
+  .goal-subnav-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+  .stepper-box {
+    padding: 4px 6px;
+  }
+  .stepper-input {
+    font-size: 1rem;
+    padding: 6px 8px;
+    min-width: 50px;
+  }
+
+  /* Advisor Card Sizing */
+  .advisor-intro-card {
+    padding: var(--space-4);
+  }
+  .advisor-card-top {
+    gap: 12px;
+  }
+  .advisor-avatar-placeholder {
+    width: 52px;
+    height: 52px;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+  }
+  .advisor-name {
+    font-size: 1.25rem;
+  }
+  .advisor-title {
+    font-size: 0.82rem;
+  }
+
+  /* Modal Layout */
+  .modal-overlay {
+    padding: 8px;
+  }
+  .modal-dialog {
+    max-height: 92vh;
+  }
+  .modal-header {
+    padding: 14px 14px 10px 14px;
+  }
+  .modal-title {
+    font-size: 1.25rem;
+  }
+  .modal-body {
+    padding: 14px;
+  }
+}
+
+/* FOLDABLE MOBILE FOLDED & ULTRA-NARROW SCREENS (280px - 359px) */
+/* e.g. Samsung Galaxy Z Fold cover display (280px) & small devices */
+@media (max-width: 360px) {
+  /* Container & Ultra-Compact Spacing */
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .section {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-8);
+  }
+  .section-kicker {
+    font-size: 0.72rem;
+  }
+  .section-title {
+    font-size: 1.35rem;
+  }
+  .section-subtitle {
+    font-size: 0.86rem;
+  }
+
+  /* Compact Navbar */
+  .nav-container {
+    padding-left: 8px;
+    padding-right: 8px;
+    height: 58px;
+  }
+  .brand-logo {
+    gap: 6px;
+  }
+  .brand-logo-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+  }
+  .brand-title {
+    font-size: 1.05rem;
+  }
+  .brand-subtitle {
+    display: none;
+  }
+  .nav-actions {
+    gap: 4px;
+  }
+  .btn-control-toggle {
+    height: 32px;
+    padding: 0 8px;
+    font-size: 0.72rem;
+    gap: 4px;
+  }
+  .btn-control-toggle svg {
+    width: 14px;
+    height: 14px;
+  }
+  .mobile-toggle {
+    padding: 6px;
+  }
+  .nav-mobile-drawer {
+    width: min(280px, 88vw);
+    padding: 14px 10px;
+  }
+
+  /* Card Paddings on 280px-340px Screens */
+  .advisor-intro-card, .trust-card, .step-card,
+  .category-card, .solution-card, .sip-info-card,
+  .life-goal-output-card, .calc-controls-card, .calc-results-card,
+  .quick-tool-card, .nj-card, .about-profile-card,
+  .form-container-card, .learn-card, .cta-inner-card,
+  .legal-card {
+    padding: 14px 10px !important;
+  }
+
+  /* Stepper Precision Sizing */
+  .stepper-box {
+    padding: 2px 4px;
+  }
+  .stepper-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+  .stepper-input {
+    min-width: 40px;
+    font-size: 0.95rem;
+    padding: 4px;
+  }
+  .stepper-currency-symbol {
+    font-size: 0.95rem;
+  }
+  .num-input {
+    width: 75px;
+    font-size: 0.95rem;
+  }
+
+  /* Subnav 1-col on 280px screens */
+  .calc-goal-subnav {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  /* Compact WhatsApp FAB for Foldable outer display */
+  .floating-whatsapp-wrap {
+    bottom: 14px;
+    right: 12px;
+  }
+  .whatsapp-fab {
+    width: 46px;
+    height: 46px;
+  }
+  .whatsapp-fab svg {
+    width: 24px;
+    height: 24px;
   }
 }
 

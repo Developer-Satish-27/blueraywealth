@@ -1,4 +1,4 @@
-﻿# System & Agent Caches
+# System & Agent Caches
 .agent/
 .agents/
 .gemini/
@@ -9,3 +9,4 @@
 Thumbs.db
 Desktop.ini
 .DS_Store
+server.ps1
