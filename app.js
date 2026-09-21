@@ -1063,12 +1063,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (window.LeadsManager) {
         const savedLead = window.LeadsManager.addLead(leadData);
         waUrl = window.LeadsManager.getWhatsAppUrl(savedLead);
-        
-        // Update direct WhatsApp button on success card with full lead details
-        const modalWaBtn = document.querySelector('#modal-success .btn-whatsapp, #lead-modal .btn-whatsapp');
-        if (modalWaBtn) {
-          modalWaBtn.setAttribute('href', waUrl);
-        }
+      }
+      if (!waUrl) {
+        waUrl = 'https://wa.me/919923861051?text=' + encodeURIComponent('Hello Suresh, I have submitted an enquiry on BlueRay Wealth.');
+      }
+      
+      // Update direct WhatsApp button on success card with full lead details
+      const modalWaBtn = document.querySelector('#modal-success .btn-whatsapp, #lead-modal .btn-whatsapp');
+      if (modalWaBtn) {
+        modalWaBtn.setAttribute('href', waUrl);
       }
 
       leadModalForm.style.display = 'none';
@@ -1213,10 +1216,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         reviewWaUrl = window.LeadsManager.getWhatsAppUrl(reviewLead);
-        const reviewWaBtn = document.querySelector('#review-success-state .btn-whatsapp');
-        if (reviewWaBtn) {
-          reviewWaBtn.setAttribute('href', reviewWaUrl);
-        }
+      }
+      if (!reviewWaUrl) {
+        reviewWaUrl = 'https://wa.me/919923861051?text=' + encodeURIComponent('Hello Suresh, I have submitted a portfolio review request on BlueRay Wealth.');
+      }
+      const reviewWaBtn = document.querySelector('#review-success-state .btn-whatsapp');
+      if (reviewWaBtn) {
+        reviewWaBtn.setAttribute('href', reviewWaUrl);
       }
 
       reviewForm.style.display = 'none';
@@ -1431,6 +1437,25 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // ==========================================================================
+  // 12. GLOBAL WHATSAPP CLICK INTERCEPTOR (DEFAULT 919923861051)
+  // ==========================================================================
+  document.addEventListener('click', function (e) {
+    const waLink = e.target.closest('a[href*="wa.me"], .whatsapp-fab, .btn-whatsapp, .btn-whatsapp-direct, [data-action="whatsapp"]');
+    if (waLink) {
+      const cfg = window.SiteConfig ? window.SiteConfig.get() : { whatsappNumber: '919923861051' };
+      const phone = (cfg.whatsappNumber || '919923861051').replace(/[^\d]/g, '') || '919923861051';
+      let href = waLink.getAttribute('href') || '';
+      
+      // If href is empty, '#', or lacks phone number, guarantee phone number
+      if (!href || href === '#' || href === 'https://wa.me' || href === 'https://wa.me/' || href.startsWith('https://wa.me/?')) {
+        const queryIndex = href.indexOf('?');
+        const query = queryIndex !== -1 ? href.substring(queryIndex) : '?text=' + encodeURIComponent('Hello Suresh, I have an enquiry regarding mutual fund investments.');
+        waLink.setAttribute('href', 'https://wa.me/' + phone + query);
+      }
+    }
+  }, true);
 
   initSectionToggles();
 

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * BlueRay Wealth - Central Site Configuration
  * Controls personal details, contact endpoints, and lead routing.
  * Can be updated via Admin Portal (admin.html).
@@ -80,14 +80,14 @@
         }
       });
 
-      // Update WhatsApp links
-      const cleanPhone = cfg.whatsappNumber.replace(/[^\d]/g, '');
+      // Update WhatsApp links to always target configured WhatsApp number (default: 919923861051)
+      const cleanPhone = (cfg.whatsappNumber ? cfg.whatsappNumber.replace(/[^\d]/g, '') : '') || '919923861051';
       document.querySelectorAll('a[href*="wa.me"]').forEach(function (a) {
-        const href = a.getAttribute('href');
-        const match = href.match(/wa\.me\/(\d*)\?(.*)/);
-        if (match) {
-          a.setAttribute('href', 'https://wa.me/' + cleanPhone + '?' + match[2]);
-        } else if (href.includes('wa.me/')) {
+        const href = a.getAttribute('href') || '';
+        const queryIndex = href.indexOf('?');
+        if (queryIndex !== -1) {
+          a.setAttribute('href', 'https://wa.me/' + cleanPhone + href.substring(queryIndex));
+        } else {
           a.setAttribute('href', 'https://wa.me/' + cleanPhone);
         }
       });
