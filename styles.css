@@ -1233,6 +1233,7 @@ img, svg {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 8px;
   margin-bottom: var(--space-4);
   min-height: 28px;
 }
@@ -1242,12 +1243,12 @@ img, svg {
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 0.72rem;
+  font-size: 0.80rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   line-height: 1;
-  padding: 5px 10px 4px 10px;
+  padding: 5px 11px 4px 11px;
   border-radius: var(--radius-full);
   white-space: nowrap;
   flex-shrink: 0;
@@ -1261,10 +1262,10 @@ img, svg {
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-size: 0.72rem;
+  font-size: 0.80rem;
   font-weight: 600;
   line-height: 1;
-  padding: 5px 10px 4px 10px;
+  padding: 5px 11px 4px 11px;
   border-radius: var(--radius-full);
   white-space: nowrap;
   flex-shrink: 0;
@@ -1286,7 +1287,8 @@ img, svg {
   color: var(--text-secondary);
   line-height: 1.55;
   margin-bottom: var(--space-6);
-  min-height: 88px;
+  padding: 0 var(--space-4);
+  min-height: 96px;
   flex-grow: 0;
 }
 
