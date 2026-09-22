@@ -1229,19 +1229,25 @@ img, svg {
 
 .cat-card-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 6px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: var(--space-4);
   min-height: 28px;
 }
 
 .cat-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  padding: 3px 8px;
+  line-height: 1;
+  padding: 5px 10px 4px 10px;
   border-radius: var(--radius-full);
   white-space: nowrap;
   flex-shrink: 0;
@@ -1251,9 +1257,14 @@ img, svg {
 .hybrid-pill { background: #F3E8FF; color: #7E22CE; }
 
 .risk-meter-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   font-size: 0.72rem;
   font-weight: 600;
-  padding: 3px 8px;
+  line-height: 1;
+  padding: 5px 10px 4px 10px;
   border-radius: var(--radius-full);
   white-space: nowrap;
   flex-shrink: 0;
@@ -1263,6 +1274,7 @@ img, svg {
 .risk-med { background: #FEF3C7; color: #B45309; }
 
 .cat-title {
+  text-align: center;
   font-size: 1.55rem;
   font-weight: 800;
   line-height: 1.25;
