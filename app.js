@@ -1080,6 +1080,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       showToast('Enquiry received! Connecting to WhatsApp...');
 
+      // Meta Pixel Event Tracking: Lead
+      if (typeof fbq === 'function') {
+        fbq('track', 'Lead', {
+          content_name: leadData.service || 'Consultation Modal',
+          currency: 'INR'
+        });
+      }
+
       // Auto-launch WhatsApp directly with pre-filled inquiry details
       if (waUrl) {
         window.open(waUrl, '_blank');
@@ -1231,6 +1239,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       showToast('Portfolio review request submitted! Connecting to WhatsApp...');
+
+      // Meta Pixel Event Tracking: Lead
+      if (typeof fbq === 'function') {
+        fbq('track', 'Lead', {
+          content_name: 'Portfolio Review Request',
+          currency: 'INR'
+        });
+      }
 
       if (reviewWaUrl) {
         window.open(reviewWaUrl, '_blank');
@@ -1453,6 +1469,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const queryIndex = href.indexOf('?');
         const query = queryIndex !== -1 ? href.substring(queryIndex) : '?text=' + encodeURIComponent('Hello Suresh, I have an enquiry regarding mutual fund investments.');
         waLink.setAttribute('href', 'https://wa.me/' + phone + query);
+      }
+
+      // Meta Pixel Event Tracking: Contact (WhatsApp Click)
+      if (typeof fbq === 'function') {
+        fbq('track', 'Contact', {
+          content_name: 'WhatsApp Click',
+          channel: 'WhatsApp'
+        });
       }
     }
   }, true);
