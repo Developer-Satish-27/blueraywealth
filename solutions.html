@@ -594,7 +594,7 @@
       </div>
 
       <div class="modal-body">
-        <form id="lead-modal-form" novalidate>
+                <form id="lead-modal-form" novalidate>
           
           <div class="form-grid-2">
             <!-- Name -->
@@ -615,80 +615,17 @@
             </div>
           </div>
 
-          <div class="form-grid-2">
-            <!-- Email -->
-            <div class="form-field">
-              <label for="lead-email" class="field-label"><span data-i18n="fld_email">Email Address</span></label>
-              <input type="email" id="lead-email" name="email" class="form-control" placeholder="rajesh@example.com">
-            </div>
-
-            <!-- City -->
-            <div class="form-field">
-              <label for="lead-city" class="field-label"><span data-i18n="fld_city">City</span> <span class="required">*</span></label>
-              <input type="text" id="lead-city" name="city" class="form-control" placeholder="e.g. Jaipur" required>
-              <div class="field-error" id="err-lead-city"></div>
-            </div>
+          <!-- Email -->
+          <div class="form-field">
+            <label for="lead-email" class="field-label"><span data-i18n="fld_email">Email Address</span></label>
+            <input type="email" id="lead-email" name="email" class="form-control" placeholder="rajesh@example.com">
+            <div class="field-error" id="err-lead-email"></div>
           </div>
 
-          <div class="form-grid-2">
-            <!-- Investor Type -->
-            <div class="form-field">
-              <label for="lead-type" class="field-label"><span data-i18n="fld_investor_type">Investor Type</span></label>
-              <select id="lead-type" name="investorType" class="form-control">
-                <option value="Salaried" selected>Salaried Professional</option>
-                <option value="Business Owner">Business Owner</option>
-                <option value="Student/Young Investor">Student / Young Investor</option>
-                <option value="Retired">Retired Person</option>
-                <option value="First-Time Investor">First-Time Investor</option>
-                <option value="High-Income Investor">High-Income Investor</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <!-- Investment Goal -->
-            <div class="form-field">
-              <label for="lead-goal" class="field-label"><span data-i18n="fld_goal">Primary Goal</span></label>
-              <select id="lead-goal" name="goal" class="form-control">
-                <option value="Wealth Creation" selected>Wealth Creation</option>
-                <option value="Retirement">Retirement Planning</option>
-                <option value="Child Education">Child Education</option>
-                <option value="Tax Saving">Tax Saving (80C ELSS)</option>
-                <option value="Regular Income">Regular Monthly Income</option>
-                <option value="Short/Medium-Term Goal">Short/Medium-Term Goal</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-grid-2">
-            <!-- Approx Investment Amount -->
-            <div class="form-field">
-              <label for="lead-amount" class="field-label"><span data-i18n="fld_approx_amt">Approximate Investment Amount</span></label>
-              <select id="lead-amount" name="amount" class="form-control">
-                <option value="₹1,000 - ₹5,000 / mo SIP">₹1,000 - ₹5,000 / month SIP</option>
-                <option value="₹5,000 - ₹15,000 / mo SIP" selected>₹5,000 - ₹15,000 / month SIP</option>
-                <option value="₹15,000 - ₹50,000 / mo SIP">₹15,000 - ₹50,000 / month SIP</option>
-                <option value="Above ₹50,000 / mo SIP">Above ₹50,000 / month SIP</option>
-                <option value="Lump-Sum under ₹5 Lakhs">Lump-Sum (Under ₹5 Lakhs)</option>
-                <option value="Lump-Sum above ₹5 Lakhs">Lump-Sum (Above ₹5 Lakhs)</option>
-              </select>
-            </div>
-
-            <!-- Preferred Contact Method -->
-            <div class="form-field">
-              <label for="lead-method" class="field-label"><span data-i18n="fld_method">Preferred Contact</span></label>
-              <select id="lead-method" name="method" class="form-control">
-                <option value="WhatsApp" selected>WhatsApp</option>
-                <option value="Phone Call">Phone Call</option>
-                <option value="Email">Email</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Message -->
+          <!-- Message / Specific Question -->
           <div class="form-field">
             <label for="lead-msg" class="field-label"><span data-i18n="fld_message_optional">Message / Specific Question</span></label>
-            <textarea id="lead-msg" name="message" rows="2" class="form-control" placeholder="What would you like to understand?"></textarea>
+            <textarea id="lead-msg" name="message" rows="3" class="form-control" placeholder="What would you like to understand?"></textarea>
           </div>
 
           <div class="form-consent-box">

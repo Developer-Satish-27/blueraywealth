@@ -996,64 +996,53 @@ document.addEventListener('DOMContentLoaded', () => {
       let hasError = false;
       const name = document.getElementById('lead-name');
       const mobile = document.getElementById('lead-mobile');
-      const city = document.getElementById('lead-city');
       const consent = document.getElementById('lead-consent');
 
       // Reset errors
-      document.getElementById('err-lead-name').textContent = '';
-      document.getElementById('err-lead-mobile').textContent = '';
-      document.getElementById('err-lead-city').textContent = '';
-      document.getElementById('err-lead-consent').textContent = '';
+      if (document.getElementById('err-lead-name')) document.getElementById('err-lead-name').textContent = '';
+      if (document.getElementById('err-lead-mobile')) document.getElementById('err-lead-mobile').textContent = '';
+      if (document.getElementById('err-lead-consent')) document.getElementById('err-lead-consent').textContent = '';
 
-      if (!name.value.trim()) {
-        document.getElementById('err-lead-name').textContent = 'Please enter your full name.';
-        name.classList.add('is-invalid');
+      if (!name || !name.value.trim()) {
+        const errName = document.getElementById('err-lead-name');
+        if (errName) errName.textContent = 'Please enter your full name.';
+        if (name) name.classList.add('is-invalid');
         hasError = true;
       } else {
         name.classList.remove('is-invalid');
       }
 
       const phoneRegex = /^[6-9]\d{9}$/;
-      if (!phoneRegex.test(mobile.value.trim())) {
-        document.getElementById('err-lead-mobile').textContent = 'Enter a valid 10-digit Indian mobile number.';
-        mobile.classList.add('is-invalid');
+      if (!mobile || !phoneRegex.test(mobile.value.trim())) {
+        const errMobile = document.getElementById('err-lead-mobile');
+        if (errMobile) errMobile.textContent = 'Enter a valid 10-digit Indian mobile number.';
+        if (mobile) mobile.classList.add('is-invalid');
         hasError = true;
       } else {
         mobile.classList.remove('is-invalid');
       }
 
-      if (!city.value.trim()) {
-        document.getElementById('err-lead-city').textContent = 'Please enter your city.';
-        city.classList.add('is-invalid');
-        hasError = true;
-      } else {
-        city.classList.remove('is-invalid');
-      }
-
-      if (!consent.checked) {
-        document.getElementById('err-lead-consent').textContent = 'Please check the consent box to proceed.';
+      if (consent && !consent.checked) {
+        const errConsent = document.getElementById('err-lead-consent');
+        if (errConsent) errConsent.textContent = 'Please check the consent box to proceed.';
         hasError = true;
       }
 
       if (hasError) return;
 
-      // Capture all lead details
+      // Capture lead details (Name, Mobile, Email, Message)
       const emailField = document.getElementById('lead-email');
-      const typeField = document.getElementById('lead-type');
-      const goalField = document.getElementById('lead-goal');
-      const amountField = document.getElementById('lead-amount');
-      const methodField = document.getElementById('lead-method');
       const msgField = document.getElementById('lead-msg');
 
       const leadData = {
         name: name.value.trim(),
         mobile: mobile.value.trim(),
         email: emailField ? emailField.value.trim() : '',
-        city: city.value.trim(),
-        investorType: typeField ? typeField.value : 'Salaried',
-        goal: goalField ? goalField.value : 'Wealth Creation',
-        amount: amountField ? amountField.value : '₹5,000 - ₹15,000 / mo SIP',
-        method: methodField ? methodField.value : 'WhatsApp',
+        city: '',
+        investorType: '',
+        goal: '',
+        amount: '',
+        method: 'WhatsApp',
         message: msgField ? msgField.value.trim() : '',
         source: 'Consultation Modal'
       };
@@ -1078,7 +1067,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (leadSuccess) {
         leadSuccess.style.display = 'block';
       }
-      showToast('Enquiry received! Connecting to WhatsApp...');
+      showToast('Enquiry received! Opening confirmation page...');
 
       // Meta Pixel Event Tracking: Lead
       if (typeof fbq === 'function') {
@@ -1088,10 +1077,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Auto-launch WhatsApp directly with pre-filled inquiry details
-      if (waUrl) {
-        window.open(waUrl, '_blank');
-      }
+      // Open Thank You landing page in new tab
+      const thankYouUrl = 'thank-you.html?name=' + encodeURIComponent(leadData.name) + 
+        '&mobile=' + encodeURIComponent(leadData.mobile) + 
+        '&email=' + encodeURIComponent(leadData.email) + 
+        (leadData.message ? '&msg=' + encodeURIComponent(leadData.message) : '');
+      window.open(thankYouUrl, '_blank');
     });
   }
 
