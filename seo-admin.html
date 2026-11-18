@@ -1,0 +1,2233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>BlueRay Wealth — On-Page SEO Admin Panel</title>
+  <link rel="icon" type="image/jpeg" href="blueray-wealth-logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0F2C59;
+      --primary-dark: #0A1C38;
+      --primary-light: #1E3E62;
+      --accent: #D4AF37;
+      --accent-hover: #C59B27;
+      --success: #10B981;
+      --success-bg: #ECFDF5;
+      --warning: #F59E0B;
+      --warning-bg: #FFFBEB;
+      --danger: #EF4444;
+      --danger-bg: #FEF2F2;
+      --info: #2563EB;
+      --info-bg: #EFF6FF;
+      --bg: #F4F7FB;
+      --surface: #FFFFFF;
+      --surface-muted: #F8FAFC;
+      --text: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --radius-sm: 6px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.07);
+      --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    h1, h2, h3, h4, .brand-title { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    /* ================= AUTH SCREEN ================= */
+    #auth-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #071326 0%, #0F2C59 60%, #1B4177 100%);
+      padding: 20px;
+    }
+    .auth-card {
+      background: var(--surface);
+      padding: 40px 34px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    .auth-logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 14px;
+      object-fit: cover;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-md);
+    }
+    .auth-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--info-bg);
+      color: var(--info);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .auth-title { font-size: 1.45rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+    .auth-sub { font-size: 0.87rem; color: var(--text-muted); margin-bottom: 24px; }
+    .pin-input {
+      width: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+      letter-spacing: 8px;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      margin-bottom: 16px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .pin-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.12); }
+
+    /* ================= BUTTONS ================= */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 18px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      border-radius: 9px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      font-family: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover:not(:disabled) { background: #059669; transform: translateY(-1px); }
+    .btn-accent { background: var(--accent); color: var(--primary-dark); }
+    .btn-accent:hover:not(:disabled) { background: var(--accent-hover); }
+    .btn-outline { background: var(--surface); border-color: var(--border); color: var(--text); }
+    .btn-outline:hover:not(:disabled) { background: var(--surface-muted); border-color: #CBD5E1; }
+    .btn-danger-outline { background: var(--surface); border-color: #FECACA; color: var(--danger); }
+    .btn-danger-outline:hover:not(:disabled) { background: var(--danger-bg); }
+    .btn-sm { padding: 7px 12px; font-size: 0.8rem; border-radius: 7px; }
+    .btn-xs { padding: 4px 9px; font-size: 0.74rem; border-radius: 6px; }
+    .btn-full { width: 100%; }
+
+    /* ================= SHELL & HEADER ================= */
+    #seo-shell { display: none; min-height: 100vh; flex-direction: column; }
+    .topbar {
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      box-shadow: var(--shadow-md);
+      flex-wrap: wrap;
+    }
+    .brand-group { display: flex; align-items: center; gap: 12px; }
+    .brand-group img { width: 38px; height: 38px; border-radius: 9px; object-fit: cover; }
+    .brand-title { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.01em; display: block; line-height: 1.2; }
+    .brand-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+    }
+    .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .gh-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      transition: background 0.15s;
+    }
+    .gh-status-pill:hover { background: rgba(255, 255, 255, 0.18); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .dot-green { background: #34D399; box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25); }
+    .dot-amber { background: #FBBF24; box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.25); }
+
+    /* ================= LAYOUT ================= */
+    .workspace {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      flex: 1;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      overflow-y: auto;
+    }
+    .sidebar-section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      padding: 0 10px;
+      margin-bottom: 6px;
+    }
+    .page-list { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+    .page-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 9px 11px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
+    .page-item:hover { background: var(--surface-muted); color: var(--primary); }
+    .page-item.active {
+      background: var(--info-bg);
+      color: var(--primary);
+      font-weight: 700;
+      border-color: #BFDBFE;
+    }
+    .page-item-left { display: flex; flex-direction: column; min-width: 0; }
+    .page-item-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .page-item-file { font-size: 0.72rem; color: var(--text-muted); font-family: ui-monospace, monospace; }
+    .score-chip {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    .score-good { background: var(--success-bg); color: #047857; }
+    .score-warn { background: var(--warning-bg); color: #B45309; }
+    .score-bad { background: var(--danger-bg); color: #B91C1C; }
+    .score-idle { background: #F1F5F9; color: #64748B; }
+
+    /* Main Panel */
+    .main-area {
+      padding: 24px 28px 60px;
+      min-width: 0;
+    }
+
+    /* Banner */
+    .connect-banner {
+      background: linear-gradient(90deg, #EFF6FF 0%, #F0FDF4 100%);
+      border: 1px solid #BFDBFE;
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .connect-banner-text h4 { font-size: 0.92rem; color: var(--primary); margin-bottom: 2px; }
+    .connect-banner-text p { font-size: 0.82rem; color: var(--text-secondary); }
+
+    /* Page Header Bar */
+    .page-header-bar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .page-header-title { font-size: 1.45rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+    .page-header-url { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+    .page-header-url a { color: var(--info); text-decoration: none; }
+    .page-header-url a:hover { text-decoration: underline; }
+    .unsaved-badge {
+      display: none;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: var(--warning-bg);
+      color: #B45309;
+      border: 1px solid #FDE68A;
+      padding: 3px 9px;
+      border-radius: 12px;
+    }
+    .unsaved-badge.show { display: inline-block; }
+
+    /* 2-Col Editor + Preview Grid */
+    .editor-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.95fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--surface-muted);
+    }
+    .card-title { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
+    .card-body { padding: 20px; }
+
+    /* Inner Tabs */
+    .inner-tabs {
+      display: flex;
+      gap: 2px;
+      border-bottom: 1px solid var(--border);
+      padding: 0 12px;
+      background: var(--surface-muted);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .inner-tabs::-webkit-scrollbar { display: none; }
+    .inner-tab {
+      padding: 12px 11px;
+      font-size: 0.81rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      border-bottom: 2.5px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .inner-tab:hover { color: var(--primary); }
+    .inner-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Form Controls */
+    .field-group { margin-bottom: 18px; }
+    .field-group:last-child { margin-bottom: 0; }
+    .field-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .field-label { font-size: 0.84rem; font-weight: 700; color: var(--text); }
+    .char-counter {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #F1F5F9;
+      color: var(--text-muted);
+    }
+    .char-good { background: var(--success-bg); color: #047857; }
+    .char-warn { background: var(--warning-bg); color: #B45309; }
+    .char-bad { background: var(--danger-bg); color: #B91C1C; }
+    .form-control {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      font-size: 0.89rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.1); }
+    textarea.form-control { resize: vertical; min-height: 78px; line-height: 1.5; }
+    .code-textarea {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+      min-height: 260px;
+      background: #0F172A;
+      color: #E2E8F0;
+      border-color: #334155;
+    }
+    .field-hint { font-size: 0.76rem; color: var(--text-muted); margin-top: 5px; }
+    .inline-row { display: flex; gap: 8px; align-items: center; }
+
+    /* Keyword Chips */
+    .kw-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .kw-chip {
+      font-size: 0.74rem;
+      background: #F1F5F9;
+      color: var(--primary);
+      padding: 3px 9px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    /* Image Alt List */
+    .img-alt-item {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 14px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: var(--surface-muted);
+      align-items: center;
+    }
+    .img-alt-thumb {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #E2E8F0;
+      border: 1px solid var(--border);
+    }
+    .img-src-label {
+      font-size: 0.74rem;
+      font-family: ui-monospace, monospace;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      word-break: break-all;
+    }
+
+    /* Right Panel: SEO Score + Google SERP Preview */
+    .sticky-col { position: sticky; top: 78px; display: flex; flex-direction: column; gap: 18px; }
+
+    .score-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .score-ring {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      border: 5px solid var(--success);
+      color: var(--primary);
+      background: #fff;
+    }
+    .score-ring.ring-warn { border-color: var(--warning); }
+    .score-ring.ring-bad { border-color: var(--danger); }
+
+    .audit-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .audit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      padding: 6px 9px;
+      border-radius: 7px;
+      background: var(--surface-muted);
+    }
+    .audit-icon { font-size: 0.85rem; flex-shrink: 0; line-height: 1.3; }
+
+    /* Google SERP Preview Box */
+    .serp-toggle { display: flex; gap: 4px; }
+    .serp-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: Arial, sans-serif;
+    }
+    .serp-box.mobile { max-width: 350px; margin: 0 auto; }
+    .serp-site-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .serp-favicon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #E2E8F0;
+    }
+    .serp-site-name { font-size: 0.82rem; color: #202124; font-weight: 500; line-height: 1.2; }
+    .serp-url { font-size: 0.74rem; color: #4D5156; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+    .serp-title {
+      font-size: 1.15rem;
+      color: #1A0DAB;
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+    .serp-desc {
+      font-size: 0.84rem;
+      color: #4D5156;
+      line-height: 1.48;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Social Card Preview */
+    .social-preview {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #F8FAFC;
+    }
+    .social-preview-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      background: var(--primary);
+      display: block;
+    }
+    .social-preview-body { padding: 12px 14px; }
+    .social-preview-domain { font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+    .social-preview-title { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .social-preview-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+
+    /* Site-Wide Audit Table */
+    .audit-table-wrap { overflow-x: auto; }
+    .audit-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    .audit-table th {
+      text-align: left;
+      padding: 11px 14px;
+      background: var(--surface-muted);
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+    }
+    .audit-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .audit-table tr:hover td { background: #F8FAFC; }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 18px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      max-width: 640px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-head {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-head h3 { font-size: 1.1rem; color: var(--primary); }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+    .modal-body { padding: 20px 22px; }
+    .modal-foot {
+      padding: 14px 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background: var(--surface-muted);
+    }
+
+    .diff-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      font-size: 0.82rem;
+    }
+    .diff-label { background: var(--surface-muted); padding: 6px 12px; font-weight: 700; color: var(--primary); border-bottom: 1px solid var(--border); }
+    .diff-old { background: #FEF2F2; color: #991B1B; padding: 7px 12px; word-break: break-word; }
+    .diff-new { background: #ECFDF5; color: #065F46; padding: 7px 12px; word-break: break-word; border-top: 1px dashed #A7F3D0; }
+
+    .guide-steps {
+      background: var(--surface-muted);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 0.83rem;
+    }
+    .guide-steps ol { padding-left: 18px; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; color: var(--text-secondary); }
+    .guide-steps code { background: #E2E8F0; padding: 1px 5px; border-radius: 4px; font-size: 0.78rem; color: var(--primary); }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      z-index: 300;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s ease;
+      max-width: 400px;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.toast-success { background: #065F46; }
+    #toast.toast-error { background: #991B1B; }
+
+    /* Commit History */
+    .commit-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 1120px) {
+      .editor-grid { grid-template-columns: 1fr; }
+      .sticky-col { position: static; }
+    }
+    @media (max-width: 820px) {
+      .workspace { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+      .main-area { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= PIN LOGIN SCREEN ================= -->
+  <div id="auth-screen">
+    <div class="auth-card">
+      <img src="blueray-wealth-logo.jpg" alt="BlueRay Wealth" class="auth-logo">
+      <div><span class="auth-badge">Zero-Backend SEO Studio</span></div>
+      <h1 class="auth-title">On-Page SEO Admin Panel</h1>
+      <p class="auth-sub">BlueRay Wealth (blueraywealth.com)<br>Enter your Admin Security PIN to manage live SEO.</p>
+      <form id="auth-form" onsubmit="return handlePinLogin(event);">
+        <input type="password" id="pin-input" class="pin-input" maxlength="8" placeholder="••••" autofocus required>
+        <button type="submit" class="btn btn-primary btn-full">🔓 Unlock SEO Panel</button>
+      </form>
+      <p style="font-size:0.76rem; color:var(--text-muted); margin-top:14px;">
+        Uses the same Admin PIN as <code>admin.html</code>.
+      </p>
+    </div>
+  </div>
+
+  <!-- ================= SEO ADMIN SHELL ================= -->
+  <div id="seo-shell">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="brand-group">
+        <img src="blueray-wealth-logo.jpg" alt="BlueRay Wealth">
+        <div>
+          <span class="brand-title">BlueRay Wealth SEO Panel</span>
+          <span class="brand-tag">No-Backend Live On-Page SEO Publisher</span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <button class="gh-status-pill" id="gh-status-pill" onclick="openGithubModal()">
+          <span class="status-dot dot-amber" id="gh-status-dot"></span>
+          <span id="gh-status-text">Connect GitHub for 1-Click Live Publish</span>
+        </button>
+        <a href="admin.html" class="btn btn-sm btn-outline" style="background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.25);">
+          📥 Leads Admin
+        </a>
+        <a href="https://blueraywealth.com/" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-accent">
+          🌐 Live Site
+        </a>
+        <button onclick="handleLogout()" class="btn btn-sm btn-outline" style="background:transparent; color:#fff; border-color:rgba(255,255,255,0.28);">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <!-- Left Sidebar -->
+      <aside class="sidebar">
+        <div>
+          <button class="btn btn-primary btn-full btn-sm" onclick="openSiteAuditView()">
+            📊 Site-Wide SEO Audit (All Pages)
+          </button>
+        </div>
+
+        <div>
+          <div class="sidebar-section-label">Website Pages (13)</div>
+          <ul class="page-list" id="html-pages-list"></ul>
+        </div>
+
+        <div>
+          <div class="sidebar-section-label">Technical SEO Files</div>
+          <ul class="page-list" id="tech-files-list">
+            <li class="page-item" data-file="sitemap.xml" onclick="selectSpecialFile('sitemap.xml')">
+              <div class="page-item-left">
+                <span class="page-item-name">🗺️ XML Sitemap</span>
+                <span class="page-item-file">sitemap.xml</span>
+              </div>
+            </li>
+            <li class="page-item" data-file="robots.txt" onclick="selectSpecialFile('robots.txt')">
+              <div class="page-item-left">
+                <span class="page-item-name">🤖 Robots.txt</span>
+                <span class="page-item-file">robots.txt</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="main-area">
+
+        <!-- Setup Banner (shown until GitHub PAT is connected) -->
+        <div class="connect-banner" id="connect-banner">
+          <div class="connect-banner-text">
+            <h4>🚀 Live Domain Par Direct Publish Karne Ke Liye GitHub Connect Karein (1-Time Setup)</h4>
+            <p>Bina kisi backend server ke aapke SEO updates seedha <strong>blueraywealth.com</strong> ke real HTML files me live publish honge (Googlebot 100% read karega). Bina connect kiye bhi aap edit aur HTML download kar sakte hain.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openGithubModal()">🔑 Connect GitHub Token</button>
+        </div>
+
+        <!-- ================= VIEW 1: PAGE SEO EDITOR ================= -->
+        <section id="view-page-editor">
+          <div class="page-header-bar">
+            <div>
+              <h2 class="page-header-title">
+                <span id="active-page-name">Home Page</span>
+                <span class="unsaved-badge" id="unsaved-badge">Unsaved Changes</span>
+              </h2>
+              <div class="page-header-url">
+                File: <code id="active-file-code">index.html</code> •
+                Live URL: <a id="active-live-url" href="https://blueraywealth.com/" target="_blank" rel="noopener noreferrer">https://blueraywealth.com/</a>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-outline btn-sm" onclick="reloadCurrentPage()" title="Reload fresh file from GitHub/Server">🔄 Reload</button>
+              <button class="btn btn-outline btn-sm" onclick="openDiffModal()">🔍 Review Diff</button>
+              <button class="btn btn-outline btn-sm" onclick="downloadCurrentFile()">📥 Download HTML</button>
+              <button class="btn btn-success btn-sm" id="publish-btn" onclick="openDiffModal(true)">🚀 Publish Live</button>
+            </div>
+          </div>
+
+          <div class="editor-grid">
+            <!-- Left Column: Tabbed SEO Form -->
+            <div class="card">
+              <div class="inner-tabs">
+                <button class="inner-tab active" data-tab="meta" onclick="switchInnerTab('meta')">🏷️ Meta &amp; Canonical</button>
+                <button class="inner-tab" data-tab="social" onclick="switchInnerTab('social')">📣 OG &amp; Twitter</button>
+                <button class="inner-tab" data-tab="content" onclick="switchInnerTab('content')">📝 H1 &amp; Image Alts</button>
+                <button class="inner-tab" data-tab="schema" onclick="switchInnerTab('schema')">🧩 Schema &amp; History</button>
+              </div>
+
+              <div class="card-body">
+                <!-- TAB 1: META & CANONICAL -->
+                <div class="tab-pane active" id="pane-meta">
+                  <div class="field-group">
+                    <div class="field-label-row">
+                      <label class="field-label" for="seo-title">Meta Title (<code>&lt;title&gt;</code> &amp; <code>meta name="title"</code>)</label>
+                      <span class="char-counter" id="cnt-title">0 / 60 chars</span>
+                    </div>
+                    <input type="text" id="seo-title" class="form-control" placeholder="Enter SEO-optimized page title (50-60 characters ideal)" oninput="onFieldChange()">
+                    <div class="field-hint">Google search me blue clickable heading yahi dikhti hai. Ideal length: <strong>50–60 characters</strong>.</div>
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field-label-row">
+                      <label class="field-label" for="seo-desc">Meta Description (<code>meta name="description"</code>)</label>
+                      <span class="char-counter" id="cnt-desc">0 / 160 chars</span>
+                    </div>
+                    <textarea id="seo-desc" class="form-control" rows="3" placeholder="Write a compelling summary with target keywords (140-160 chars ideal)" oninput="onFieldChange()"></textarea>
+                    <div class="field-hint">Search result ke niche dikhne wala summary text. Ideal length: <strong>140–160 characters</strong>.</div>
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field-label-row">
+                      <label class="field-label" for="seo-keywords">Meta Keywords (comma-separated)</label>
+                      <span class="char-counter" id="cnt-kw">0 keywords</span>
+                    </div>
+                    <textarea id="seo-keywords" class="form-control" rows="2" placeholder="Mutual Fund Distributor Jaipur, SIP Investment, BlueRay Wealth..." oninput="onFieldChange()"></textarea>
+                    <div class="kw-chips" id="kw-chips"></div>
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field-label-row">
+                      <label class="field-label" for="seo-canonical">Canonical URL (<code>&lt;link rel="canonical"&gt;</code>)</label>
+                      <button type="button" class="btn btn-xs btn-outline" onclick="autoFillCanonical()">✨ Auto-Fill URL</button>
+                    </div>
+                    <input type="url" id="seo-canonical" class="form-control" placeholder="https://blueraywealth.com/" oninput="onFieldChange()">
+                    <div class="field-hint">Duplicate URL indexing rokne ke liye har page par canonical URL hona zaroori hai.</div>
+                  </div>
+
+                  <div class="field-group">
+                    <div class="field-label-row">
+                      <label class="field-label" for="seo-robots">Search Engine Indexing (<code>meta name="robots"</code>)</label>
+                    </div>
+                    <select id="seo-robots" class="form-control" onchange="onFieldChange()">
+                      <option value="index, follow">index, follow (Recommended — Google can index &amp; follow links)</option>
+                      <option value="noindex, follow">noindex, follow (Hide page from Google search, e.g. Thank You page)</option>
+                      <option value="index, nofollow">index, nofollow</option>
+                      <option value="noindex, nofollow">noindex, nofollow (Completely block page)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- TAB 2: SOCIAL (OG & TWITTER) -->
+                <div class="tab-pane" id="pane-social">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px;">
+                    <div>
+                      <strong style="font-size:0.9rem; color:var(--primary);">Open Graph &amp; Twitter Cards</strong>
+                      <div class="field-hint" style="margin-top:2px;">WhatsApp, Facebook, LinkedIn aur X par link share karne par yahi title/description/image dikhta hai.</div>
+                    </div>
+                    <button type="button" class="btn btn-xs btn-outline" onclick="syncSocialFromMeta()">📋 Copy from Core Meta</button>
+                  </div>
+
+                  <div class="field-group">
+                    <label class="field-label" for="og-title">OG Title (<code>og:title</code>)</label>
+                    <input type="text" id="og-title" class="form-control" oninput="onFieldChange()">
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label" for="og-desc">OG Description (<code>og:description</code>)</label>
+                    <textarea id="og-desc" class="form-control" rows="2" oninput="onFieldChange()"></textarea>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label" for="og-url">OG URL (<code>og:url</code>)</label>
+                    <input type="url" id="og-url" class="form-control" oninput="onFieldChange()">
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label" for="og-image">OG Image (<code>og:image</code>)</label>
+                    <input type="text" id="og-image" class="form-control" placeholder="https://blueraywealth.com/blueray-wealth-logo.jpg" oninput="onFieldChange()">
+                  </div>
+
+                  <hr style="border:none; border-top:1px solid var(--border); margin:18px 0;">
+
+                  <div class="field-group">
+                    <label class="field-label" for="tw-title">Twitter Title (<code>twitter:title</code>)</label>
+                    <input type="text" id="tw-title" class="form-control" oninput="onFieldChange()">
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label" for="tw-desc">Twitter Description (<code>twitter:description</code>)</label>
+                    <textarea id="tw-desc" class="form-control" rows="2" oninput="onFieldChange()"></textarea>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label" for="tw-image">Twitter Image (<code>twitter:image</code>)</label>
+                    <input type="text" id="tw-image" class="form-control" oninput="onFieldChange()">
+                  </div>
+                </div>
+
+                <!-- TAB 3: H1 & IMAGE ALTS -->
+                <div class="tab-pane" id="pane-content">
+                  <div class="field-group" id="h1-plain-wrap">
+                    <div class="field-label-row">
+                      <label class="field-label" for="seo-h1">Main Page Heading (<code>&lt;h1&gt;</code>)</label>
+                      <span class="char-counter" id="cnt-h1">0 chars</span>
+                    </div>
+                    <input type="text" id="seo-h1" class="form-control" placeholder="Main H1 heading on this page" oninput="onFieldChange()">
+                    <div class="field-hint">Har page par ek clear, keyword-rich <code>&lt;h1&gt;</code> heading honi chahiye.</div>
+                  </div>
+
+                  <!-- Multi-span H1 safe editor for Home Page (preserves .text-gradient styling) -->
+                  <div class="field-group" id="h1-split-wrap" style="display:none;">
+                    <div class="field-label-row">
+                      <label class="field-label">Main Hero Heading (<code>&lt;h1&gt;</code> — Styled 2-Line Design Preserved)</label>
+                      <span class="char-counter char-good">Design Safe ✓</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                      <div>
+                        <label class="field-hint" style="display:block; margin-bottom:4px;">Line 1 (Primary Color)</label>
+                        <input type="text" id="seo-h1-p1" class="form-control" oninput="onFieldChange()">
+                      </div>
+                      <div>
+                        <label class="field-hint" style="display:block; margin-bottom:4px;">Line 2 (Gradient Accent)</label>
+                        <input type="text" id="seo-h1-p2" class="form-control" oninput="onFieldChange()">
+                      </div>
+                    </div>
+                    <div class="field-hint">Home page ka gradient styling (<code>.text-gradient</code>) bina toote sirf H1 text safely update hoga.</div>
+                  </div>
+
+                  <hr style="border:none; border-top:1px solid var(--border); margin:20px 0;">
+
+                  <div>
+                    <div class="field-label-row" style="margin-bottom:10px;">
+                      <span class="field-label">🖼️ Content Image Alt Text Audit &amp; Editor</span>
+                      <span class="char-counter" id="cnt-alts">0 images</span>
+                    </div>
+                    <p class="field-hint" style="margin-bottom:12px;">
+                      Sirf visible content images yahan dikh rahi hain (Meta Pixel / GTM tracking tags automatically safe &amp; untouched rehte hain).
+                    </p>
+                    <div id="img-alts-container"></div>
+                  </div>
+                </div>
+
+                <!-- TAB 4: SCHEMA & COMMIT HISTORY -->
+                <div class="tab-pane" id="pane-schema">
+                  <div class="field-group">
+                    <div class="field-label-row">
+                      <label class="field-label" for="seo-schema">Structured Data (<code>application/ld+json</code>)</label>
+                      <span class="char-counter" id="schema-status">No Schema</span>
+                    </div>
+                    <textarea id="seo-schema" class="form-control code-textarea" placeholder="No JSON-LD schema found on this page (optional)." oninput="onFieldChange()"></textarea>
+                    <div class="field-hint">JSON syntax automatically validate hota hai taaki galat JSON live publish na ho.</div>
+                  </div>
+
+                  <hr style="border:none; border-top:1px solid var(--border); margin:20px 0;">
+
+                  <div>
+                    <div class="field-label-row" style="margin-bottom:10px;">
+                      <span class="field-label">🕒 Recent Live Updates (GitHub History)</span>
+                      <button type="button" class="btn btn-xs btn-outline" onclick="loadCommitHistory()">Refresh</button>
+                    </div>
+                    <div id="commit-history-list">
+                      <p class="field-hint">GitHub Token connect karne par is file ke recent live SEO commits yahan dikhenge.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Right Column: Live SEO Score + Google SERP Preview + Social Preview -->
+            <div class="sticky-col">
+              <!-- SEO Score Card -->
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">📈 Live On-Page SEO Score</span>
+                  <span id="score-grade-label" class="score-chip score-good">Excellent</span>
+                </div>
+                <div class="card-body">
+                  <div class="score-header">
+                    <div class="score-ring" id="score-ring">--</div>
+                    <div>
+                      <div style="font-weight:700; font-size:0.95rem; color:var(--primary);" id="score-summary-title">Analyzing page...</div>
+                      <div style="font-size:0.78rem; color:var(--text-muted);" id="score-summary-sub">Real-time checklist based on Google On-Page SEO best practices.</div>
+                    </div>
+                  </div>
+                  <ul class="audit-list" id="live-audit-list"></ul>
+                </div>
+              </div>
+
+              <!-- Google SERP Preview -->
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">🔍 Google Search Preview</span>
+                  <div class="serp-toggle">
+                    <button type="button" class="btn btn-xs btn-primary" id="serp-desktop-btn" onclick="setSerpMode('desktop')">Desktop</button>
+                    <button type="button" class="btn btn-xs btn-outline" id="serp-mobile-btn" onclick="setSerpMode('mobile')">Mobile</button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="serp-box" id="serp-box">
+                    <div class="serp-site-row">
+                      <img src="blueray-wealth-logo.jpg" alt="" class="serp-favicon">
+                      <div>
+                        <div class="serp-site-name">BlueRay Wealth</div>
+                        <div class="serp-url" id="serp-url-preview">https://blueraywealth.com</div>
+                      </div>
+                    </div>
+                    <div class="serp-title" id="serp-title-preview">Page Title Preview</div>
+                    <div class="serp-desc" id="serp-desc-preview">Meta description preview will appear here...</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Social Share Preview -->
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">💬 WhatsApp / Social Share Preview</span>
+                </div>
+                <div class="card-body">
+                  <div class="social-preview">
+                    <img id="social-img-preview" src="blueray-wealth-logo.jpg" alt="Social preview" class="social-preview-img" onerror="this.src='blueray-wealth-logo.jpg'">
+                    <div class="social-preview-body">
+                      <div class="social-preview-domain">blueraywealth.com</div>
+                      <div class="social-preview-title" id="social-title-preview">OG Title</div>
+                      <div class="social-preview-desc" id="social-desc-preview">OG Description</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 2: SITEMAP / ROBOTS EDITOR ================= -->
+        <section id="view-tech-editor" style="display:none;">
+          <div class="page-header-bar">
+            <div>
+              <h2 class="page-header-title" id="tech-file-title">🗺️ sitemap.xml</h2>
+              <div class="page-header-url" id="tech-file-sub">Edit technical SEO file directly and publish live without backend.</div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-outline btn-sm" onclick="downloadTechFile()">📥 Download File</button>
+              <button class="btn btn-success btn-sm" onclick="publishTechFile()">🚀 Publish Live</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title" id="tech-editor-label">Raw File Editor</span>
+              <span class="field-hint" style="margin:0;">Exact content published to <code>blueraywealth.com</code></span>
+            </div>
+            <div class="card-body">
+              <textarea id="tech-file-content" class="form-control code-textarea" style="min-height:420px;"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 3: SITE-WIDE SEO AUDIT ================= -->
+        <section id="view-site-audit" style="display:none;">
+          <div class="page-header-bar">
+            <div>
+              <h2 class="page-header-title">📊 Site-Wide On-Page SEO Audit</h2>
+              <div class="page-header-url">Complete overview of all 13 website pages — click any page to optimize it.</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="runFullSiteAudit()">🔄 Re-Scan All Pages</button>
+          </div>
+
+          <div class="card">
+            <div class="audit-table-wrap">
+              <table class="audit-table">
+                <thead>
+                  <tr>
+                    <th>Page</th>
+                    <th>Meta Title</th>
+                    <th>Meta Desc</th>
+                    <th>Canonical</th>
+                    <th>OG Tags</th>
+                    <th>Score</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="site-audit-tbody">
+                  <tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">Click "Re-Scan All Pages" to run audit...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: GITHUB CONNECTION SETUP ================= -->
+  <div class="modal-backdrop" id="github-modal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3>🔑 Connect GitHub (Zero-Backend Live Publisher)</h3>
+        <button class="modal-close" onclick="closeModal('github-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="guide-steps">
+          <strong>4 Easy Steps me Free GitHub Token Banayein (Sirf 1 Baar):</strong>
+          <ol>
+            <li>GitHub login karke jayein: <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer" style="color:var(--info); font-weight:600;">github.com/settings/personal-access-tokens/new</a></li>
+            <li><strong>Token name:</strong> <code>BlueRay-SEO-Panel</code> • <strong>Repository access:</strong> Select <em>Only select repositories</em> → <code>blueraywealth</code></li>
+            <li><strong>Permissions → Repository permissions → Contents:</strong> <code>Read and write</code> select karein.</li>
+            <li><strong>Generate token</strong> click karein aur token copy karke niche paste kar dein. (Token sirf aapke browser me save hota hai, code me kabhi save nahi hota.)</li>
+          </ol>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="gh-owner">GitHub Username / Owner</label>
+          <input type="text" id="gh-owner" class="form-control" value="Developer-Satish-27">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="gh-repo">Repository Name</label>
+          <input type="text" id="gh-repo" class="form-control" value="blueraywealth">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="gh-branch">Branch Name</label>
+          <input type="text" id="gh-branch" class="form-control" value="main">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="gh-token">GitHub Personal Access Token (PAT)</label>
+          <input type="password" id="gh-token" class="form-control" placeholder="github_pat_... or ghp_...">
+          <div class="field-hint">Stored securely in your browser's localStorage only. Never sent anywhere except GitHub API.</div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-danger-outline btn-sm" onclick="disconnectGithub()">Disconnect</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('github-modal')">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm" id="gh-save-btn" onclick="saveAndTestGithub()">✓ Verify &amp; Save Connection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: REVIEW DIFF & PUBLISH ================= -->
+  <div class="modal-backdrop" id="diff-modal">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3 id="diff-modal-title">🔍 Review On-Page SEO Changes</h3>
+        <button class="modal-close" onclick="closeModal('diff-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="diff-content"></div>
+        <div class="field-group" style="margin-top:16px;" id="commit-msg-wrap">
+          <label class="field-label" for="commit-msg-input">Update Note (Git Commit Message)</label>
+          <input type="text" id="commit-msg-input" class="form-control" placeholder="seo: update on-page meta tags">
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('diff-modal')">Close</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="downloadCurrentFile()">📥 Download HTML</button>
+        <button type="button" class="btn btn-success btn-sm" id="confirm-publish-btn" onclick="executePublishCurrentPage()">🚀 Confirm &amp; Publish Live</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <!-- Load shared SiteConfig (for Admin PIN) -->
+  <script src="site-config.js"></script>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ================= CONSTANTS =================
+      const DOMAIN = 'https://blueraywealth.com';
+      const GH_STORAGE_KEY = 'blueray_seo_gh_config';
+      const DEFAULT_GH = {
+        owner: 'Developer-Satish-27',
+        repo: 'blueraywealth',
+        branch: 'main',
+        token: ''
+      };
+
+      const PAGES = [
+        { file: 'index.html', name: 'Home Page', path: '/' },
+        { file: 'about.html', name: 'About Us', path: '/about.html' },
+        { file: 'mutual-funds.html', name: 'Mutual Funds', path: '/mutual-funds.html' },
+        { file: 'solutions.html', name: 'Solutions', path: '/solutions.html' },
+        { file: 'calculators.html', name: 'Calculators', path: '/calculators.html' },
+        { file: 'portfolio-review.html', name: 'Portfolio Review', path: '/portfolio-review.html' },
+        { file: 'learn.html', name: 'Learning Center', path: '/learn.html' },
+        { file: 'contact.html', name: 'Contact Us', path: '/contact.html' },
+        { file: 'privacy-policy.html', name: 'Privacy Policy', path: '/privacy-policy.html' },
+        { file: 'terms-conditions.html', name: 'Terms & Conditions', path: '/terms-conditions.html' },
+        { file: 'disclaimer.html', name: 'Disclaimer', path: '/disclaimer.html' },
+        { file: 'risk-disclosure.html', name: 'Risk Disclosure', path: '/risk-disclosure.html' },
+        { file: 'thank-you.html', name: 'Thank You Page', path: '/thank-you.html' }
+      ];
+
+      // ================= STATE =================
+      let activeFile = 'index.html';
+      let activeTechFile = null;
+      let originalRawHtml = '';
+      let originalSha = null;
+      let originalParsed = null;
+      let currentImages = []; // [{ index, src, alt, originalAlt, rawTag }]
+      let hasUnsaved = false;
+      let scoresCache = {};
+
+      // ================= UTF-8 SAFE BASE64 =================
+      function decodeBase64UTF8(b64) {
+        const clean = (b64 || '').replace(/\n/g, '');
+        const binStr = atob(clean);
+        const bytes = new Uint8Array(binStr.length);
+        for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
+        return new TextDecoder('utf-8', { ignoreBOM: true }).decode(bytes);
+      }
+
+      function encodeBase64UTF8(str) {
+        const bytes = new TextEncoder().encode(str);
+        let binStr = '';
+        const chunk = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunk) {
+          binStr += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+        }
+        return btoa(binStr);
+      }
+
+      function escapeAttr(val) {
+        return String(val || '')
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      function decodeEntities(val) {
+        if (!val) return '';
+        const txt = document.createElement('textarea');
+        txt.innerHTML = val;
+        return txt.value;
+      }
+
+      function escapeHtmlText(val) {
+        return String(val || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      // ================= TOAST =================
+      let toastTimer = null;
+      function showToast(msg, type = '') {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'show' + (type ? ' toast-' + type : '');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { el.className = ''; }, 3600);
+      }
+
+      // ================= AUTH =================
+      function getPin() {
+        if (window.SiteConfig) return window.SiteConfig.get().adminPin || '2710';
+        return '2710';
+      }
+
+      window.handlePinLogin = function (e) {
+        e.preventDefault();
+        const entered = document.getElementById('pin-input').value.trim();
+        if (entered === getPin()) {
+          sessionStorage.setItem('blueray_seo_auth', 'true');
+          unlockShell();
+        } else {
+          showToast('❌ Incorrect PIN. Please try again.', 'toast-error');
+          document.getElementById('pin-input').value = '';
+          document.getElementById('pin-input').focus();
+        }
+        return false;
+      };
+
+      window.handleLogout = function () {
+        sessionStorage.removeItem('blueray_seo_auth');
+        location.reload();
+      };
+
+      function unlockShell() {
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('seo-shell').style.display = 'flex';
+        renderSidebar();
+        updateGithubStatusUI();
+        selectHtmlPage('index.html');
+      }
+
+      // ================= GITHUB CONFIG & API =================
+      function getGhConfig() {
+        try {
+          const saved = localStorage.getItem(GH_STORAGE_KEY);
+          if (saved) return Object.assign({}, DEFAULT_GH, JSON.parse(saved));
+        } catch (e) {}
+        return Object.assign({}, DEFAULT_GH);
+      }
+
+      function isGhConnected() {
+        const cfg = getGhConfig();
+        return !!(cfg.token && cfg.owner && cfg.repo);
+      }
+
+      function updateGithubStatusUI() {
+        const cfg = getGhConfig();
+        const connected = isGhConnected();
+        const dot = document.getElementById('gh-status-dot');
+        const txt = document.getElementById('gh-status-text');
+        const banner = document.getElementById('connect-banner');
+
+        if (connected) {
+          dot.className = 'status-dot dot-green';
+          txt.textContent = `Live Connected: ${cfg.owner}/${cfg.repo}`;
+          banner.style.display = 'none';
+        } else {
+          dot.className = 'status-dot dot-amber';
+          txt.textContent = 'Connect GitHub (1-Click Live Publish)';
+          banner.style.display = 'flex';
+        }
+      }
+
+      window.openGithubModal = function () {
+        const cfg = getGhConfig();
+        document.getElementById('gh-owner').value = cfg.owner;
+        document.getElementById('gh-repo').value = cfg.repo;
+        document.getElementById('gh-branch').value = cfg.branch;
+        document.getElementById('gh-token').value = cfg.token;
+        document.getElementById('github-modal').classList.add('open');
+      };
+
+      window.closeModal = function (id) {
+        document.getElementById(id).classList.remove('open');
+      };
+
+      window.disconnectGithub = function () {
+        localStorage.removeItem(GH_STORAGE_KEY);
+        document.getElementById('gh-token').value = '';
+        updateGithubStatusUI();
+        closeModal('github-modal');
+        showToast('GitHub disconnected from this browser.');
+      };
+
+      window.saveAndTestGithub = async function () {
+        const owner = document.getElementById('gh-owner').value.trim();
+        const repo = document.getElementById('gh-repo').value.trim();
+        const branch = document.getElementById('gh-branch').value.trim() || 'main';
+        const token = document.getElementById('gh-token').value.trim();
+
+        if (!owner || !repo || !token) {
+          showToast('Please enter Owner, Repo, and GitHub Token.', 'toast-error');
+          return;
+        }
+
+        const btn = document.getElementById('gh-save-btn');
+        btn.disabled = true;
+        btn.textContent = 'Verifying...';
+
+        try {
+          const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Accept': 'application/vnd.github+json'
+            }
+          });
+          if (!res.ok) {
+            throw new Error(`GitHub API Error (${res.status}). Check token & repo permissions.`);
+          }
+          const data = await res.json();
+          if (data.permissions && data.permissions.push === false) {
+            throw new Error('Token only has Read access. Please enable Contents: Read & Write.');
+          }
+          localStorage.setItem(GH_STORAGE_KEY, JSON.stringify({ owner, repo, branch, token }));
+          updateGithubStatusUI();
+          closeModal('github-modal');
+          showToast('✅ GitHub Connected! Now you can publish SEO changes live.', 'toast-success');
+          reloadCurrentPage();
+        } catch (err) {
+          showToast('❌ ' + err.message, 'toast-error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '✓ Verify & Save Connection';
+        }
+      };
+
+      async function fetchFileContent(fileName) {
+        const cfg = getGhConfig();
+        // Prefer GitHub API when connected so we always get exact latest SHA & content
+        if (isGhConnected()) {
+          const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${fileName}?ref=${encodeURIComponent(cfg.branch)}&_t=${Date.now()}`;
+          const res = await fetch(url, {
+            headers: {
+              'Authorization': `Bearer ${cfg.token}`,
+              'Accept': 'application/vnd.github+json'
+            }
+          });
+          if (!res.ok) throw new Error(`Could not fetch ${fileName} from GitHub (${res.status})`);
+          const data = await res.json();
+          return {
+            content: decodeBase64UTF8(data.content),
+            sha: data.sha,
+            source: 'github'
+          };
+        }
+
+        // Fallback: fetch directly from the website origin (works on live domain & local server)
+        const res = await fetch(`./${fileName}?_t=${Date.now()}`);
+        if (!res.ok) throw new Error(`Could not load ${fileName} (${res.status}). Connect GitHub token or open via live URL.`);
+        return {
+          content: await res.text(),
+          sha: null,
+          source: 'local'
+        };
+      }
+
+      async function commitFileToGithub(fileName, newContent, commitMessage) {
+        const cfg = getGhConfig();
+        if (!isGhConnected()) {
+          openGithubModal();
+          throw new Error('Please connect your GitHub Token first to publish live.');
+        }
+
+        // Always fetch latest SHA right before committing to avoid 409 conflict
+        const latest = await fetchFileContent(fileName);
+
+        const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${fileName}`;
+        const body = {
+          message: commitMessage,
+          content: encodeBase64UTF8(newContent),
+          branch: cfg.branch
+        };
+        if (latest.sha) body.sha = latest.sha;
+
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${cfg.token}`,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || `GitHub commit failed (${res.status})`);
+        }
+        return await res.json();
+      }
+
+      // ================= SURGICAL HTML SEO PARSER =================
+      function extractHeadBlock(html) {
+        const m = html.match(/<head\b[^>]*>[\s\S]*?<\/head>/i);
+        return m ? m[0] : '';
+      }
+
+      function getMetaContent(headHtml, attrType, attrName) {
+        // Matches <meta name="description" content="..."> regardless of attribute order
+        const re1 = new RegExp(`<meta\\b[^>]*\\b${attrType}\\s*=\\s*["']${attrName}["'][^>]*\\bcontent\\s*=\\s*["']([^"']*)["'][^>]*>`, 'i');
+        const m1 = headHtml.match(re1);
+        if (m1) return decodeEntities(m1[1]);
+        const re2 = new RegExp(`<meta\\b[^>]*\\bcontent\\s*=\\s*["']([^"']*)["'][^>]*\\b${attrType}\\s*=\\s*["']${attrName}["'][^>]*>`, 'i');
+        const m2 = headHtml.match(re2);
+        return m2 ? decodeEntities(m2[1]) : '';
+      }
+
+      function parseSeoFromHtml(html) {
+        const head = extractHeadBlock(html);
+        const titleMatch = head.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i);
+        const title = titleMatch ? decodeEntities(titleMatch[1].trim()) : '';
+
+        const description = getMetaContent(head, 'name', 'description');
+        const keywords = getMetaContent(head, 'name', 'keywords');
+        const robots = getMetaContent(head, 'name', 'robots') || 'index, follow';
+
+        const canonicalMatch = head.match(/<link\b[^>]*\brel\s*=\s*["']canonical["'][^>]*\bhref\s*=\s*["']([^"']*)["'][^>]*>/i)
+          || head.match(/<link\b[^>]*\bhref\s*=\s*["']([^"']*)["'][^>]*\brel\s*=\s*["']canonical["'][^>]*>/i);
+        const canonical = canonicalMatch ? decodeEntities(canonicalMatch[1]) : '';
+
+        const ogTitle = getMetaContent(head, 'property', 'og:title');
+        const ogDesc = getMetaContent(head, 'property', 'og:description');
+        const ogUrl = getMetaContent(head, 'property', 'og:url');
+        const ogImage = getMetaContent(head, 'property', 'og:image');
+
+        const twTitle = getMetaContent(head, 'property', 'twitter:title') || getMetaContent(head, 'name', 'twitter:title');
+        const twDesc = getMetaContent(head, 'property', 'twitter:description') || getMetaContent(head, 'name', 'twitter:description');
+        const twImage = getMetaContent(head, 'property', 'twitter:image') || getMetaContent(head, 'name', 'twitter:image');
+
+        // Parse H1
+        const h1Match = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
+        let h1Mode = 'plain';
+        let h1Plain = '';
+        let h1P1 = '';
+        let h1P2 = '';
+        if (h1Match) {
+          const inner = h1Match[1];
+          const p1m = inner.match(/data-i18n=["']hero_h1_p1["'][^>]*>([\s\S]*?)<\/span>/i);
+          const p2m = inner.match(/data-i18n=["']hero_h1_p2["'][^>]*>([\s\S]*?)<\/span>/i);
+          if (p1m && p2m) {
+            h1Mode = 'split';
+            h1P1 = decodeEntities(p1m[1].trim());
+            h1P2 = decodeEntities(p2m[1].trim());
+            h1Plain = `${h1P1} ${h1P2}`.trim();
+          } else {
+            h1Plain = decodeEntities(inner.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
+          }
+        }
+
+        // Parse JSON-LD Schema
+        const schemaMatch = head.match(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i);
+        const schema = schemaMatch ? schemaMatch[1].trim() : '';
+
+        // Parse visible content <img> tags (strictly skipping <noscript> and tracking pixels!)
+        const bodyMatch = html.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i);
+        const bodyHtml = bodyMatch ? bodyMatch[1] : '';
+        // Strip <noscript> blocks when discovering editable content images
+        const bodyNoScript = bodyHtml.replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, '');
+        const imgs = [];
+        const imgRe = /<img\b[^>]*>/gi;
+        let m;
+        let idx = 0;
+        while ((m = imgRe.exec(bodyNoScript)) !== null) {
+          const tag = m[0];
+          if (/facebook\.com\/tr|display\s*:\s*none/i.test(tag)) continue;
+          const srcM = tag.match(/\bsrc\s*=\s*["']([^"']*)["']/i);
+          const altM = tag.match(/\balt\s*=\s*["']([^"']*)["']/i);
+          const src = srcM ? srcM[1] : '';
+          const alt = altM ? decodeEntities(altM[1]) : '';
+          imgs.push({ index: idx++, src, alt, originalAlt: alt, rawTag: tag });
+        }
+
+        return {
+          title, description, keywords, robots, canonical,
+          ogTitle, ogDesc, ogUrl, ogImage,
+          twTitle, twDesc, twImage,
+          h1Mode, h1Plain, h1P1, h1P2,
+          schema, imgs
+        };
+      }
+
+      // ================= SURGICAL HTML SEO PATCHER =================
+      // Modifies ONLY targeted SEO tags inside <head> + H1 + non-tracking <img> alts.
+      // Guarantees GTM, Meta Pixel, layout, scripts, and CSS stay 100% untouched!
+      function upsertMetaInHead(headHtml, attrType, attrName, newValue, insertAfterPattern) {
+        const safeVal = escapeAttr(newValue);
+        // Check if tag exists with attrType (or fallback for twitter name/property)
+        const reAttrFirst = new RegExp(`(<meta\\b[^>]*\\b${attrType}\\s*=\\s*["']${attrName}["'][^>]*\\bcontent\\s*=\\s*)(["'])[^"']*\\2`, 'i');
+        if (reAttrFirst.test(headHtml)) {
+          return headHtml.replace(reAttrFirst, `$1"${safeVal}"`);
+        }
+        const reContentFirst = new RegExp(`(<meta\\b[^>]*\\bcontent\\s*=\\s*)(["'])[^"']*\\2([^>]*\\b${attrType}\\s*=\\s*["']${attrName}["'][^>]*>)`, 'i');
+        if (reContentFirst.test(headHtml)) {
+          return headHtml.replace(reContentFirst, `$1"${safeVal}"$3`);
+        }
+        // If newValue is empty and tag didn't exist, don't inject empty tag
+        if (!newValue) return headHtml;
+
+        const newTag = `  <meta ${attrType}="${attrName}" content="${safeVal}">`;
+        if (insertAfterPattern && insertAfterPattern.test(headHtml)) {
+          return headHtml.replace(insertAfterPattern, (match) => `${match}\n${newTag}`);
+        }
+        return headHtml.replace(/<\/head>/i, `${newTag}\n</head>`);
+      }
+
+      function upsertTwitterMetaInHead(headHtml, attrName, newValue) {
+        // Respect existing attribute style (property="twitter:..." vs name="twitter:...")
+        const hasProperty = new RegExp(`<meta\\b[^>]*\\bproperty\\s*=\\s*["']${attrName}["']`, 'i').test(headHtml);
+        const hasName = new RegExp(`<meta\\b[^>]*\\bname\\s*=\\s*["']${attrName}["']`, 'i').test(headHtml);
+        const attrType = hasProperty ? 'property' : (hasName ? 'name' : 'property');
+        return upsertMetaInHead(headHtml, attrType, attrName, newValue, /<meta\b[^>]*property=["']twitter:[^"']+["'][^>]*>/i);
+      }
+
+      function buildUpdatedHtml(rawHtml, formVals, origParsed, imgEdits) {
+        const headMatch = rawHtml.match(/<head\b[^>]*>[\s\S]*?<\/head>/i);
+        if (!headMatch) return rawHtml;
+        let head = headMatch[0];
+
+        // 1. <title>
+        if (/<title\b[^>]*>[\s\S]*?<\/title>/i.test(head)) {
+          head = head.replace(/(<title\b[^>]*>)[\s\S]*?(<\/title>)/i, `$1${escapeHtmlText(formVals.title)}$2`);
+        } else if (formVals.title) {
+          head = head.replace(/(<meta\b[^>]*viewport[^>]*>)/i, `$1\n  <title>${escapeHtmlText(formVals.title)}</title>`);
+        }
+
+        // 2. Meta title, description, keywords, robots
+        if (/<meta\b[^>]*\bname\s*=\s*["']title["']/i.test(head)) {
+          head = upsertMetaInHead(head, 'name', 'title', formVals.title);
+        }
+        head = upsertMetaInHead(head, 'name', 'description', formVals.description, /<title\b[^>]*>[\s\S]*?<\/title>/i);
+        head = upsertMetaInHead(head, 'name', 'keywords', formVals.keywords, /<meta\b[^>]*name=["']description["'][^>]*>/i);
+        head = upsertMetaInHead(head, 'name', 'robots', formVals.robots, /<meta\b[^>]*name=["']description["'][^>]*>/i);
+
+        // 3. Canonical URL
+        const canRe = /<link\b[^>]*\brel\s*=\s*["']canonical["'][^>]*>/i;
+        if (formVals.canonical) {
+          const canTag = `<link rel="canonical" href="${escapeAttr(formVals.canonical)}">`;
+          if (canRe.test(head)) {
+            head = head.replace(canRe, canTag);
+          } else {
+            head = head.replace(/(<meta\b[^>]*name=["']robots["'][^>]*>)/i, `$1\n  ${canTag}`);
+          }
+        } else if (canRe.test(head)) {
+          head = head.replace(/\n?\s*<link\b[^>]*\brel\s*=\s*["']canonical["'][^>]*>/i, '');
+        }
+
+        // 4. Open Graph
+        head = upsertMetaInHead(head, 'property', 'og:title', formVals.ogTitle, /<meta\b[^>]*property=["']og:url["'][^>]*>/i);
+        head = upsertMetaInHead(head, 'property', 'og:description', formVals.ogDesc, /<meta\b[^>]*property=["']og:title["'][^>]*>/i);
+        head = upsertMetaInHead(head, 'property', 'og:url', formVals.ogUrl, /<meta\b[^>]*property=["']og:type["'][^>]*>/i);
+        head = upsertMetaInHead(head, 'property', 'og:image', formVals.ogImage, /<meta\b[^>]*property=["']og:description["'][^>]*>/i);
+
+        // 5. Twitter
+        head = upsertTwitterMetaInHead(head, 'twitter:title', formVals.twTitle);
+        head = upsertTwitterMetaInHead(head, 'twitter:description', formVals.twDesc);
+        head = upsertTwitterMetaInHead(head, 'twitter:image', formVals.twImage);
+
+        // 6. JSON-LD Schema (only if modified)
+        if (formVals.schema.trim() !== (origParsed.schema || '').trim()) {
+          const schemaRe = /(<script\b[^>]*type=["']application\/ld\+json["'][^>]*>)[\s\S]*?(<\/script>)/i;
+          if (schemaRe.test(head)) {
+            if (formVals.schema.trim()) {
+              head = head.replace(schemaRe, `$1\n  ${formVals.schema.trim()}\n  $2`);
+            }
+          } else if (formVals.schema.trim()) {
+            head = head.replace(/<\/head>/i, `  <script type="application/ld+json">\n  ${formVals.schema.trim()}\n  <\/script>\n</head>`);
+          }
+        }
+
+        let updated = rawHtml.replace(headMatch[0], () => head);
+
+        // 7. H1 Heading (only if modified)
+        if (origParsed.h1Mode === 'split') {
+          if (formVals.h1P1 !== origParsed.h1P1) {
+            updated = updated.replace(/(data-i18n=["']hero_h1_p1["'][^>]*>)([\s\S]*?)(<\/span>)/i, `$1${escapeHtmlText(formVals.h1P1)}$3`);
+          }
+          if (formVals.h1P2 !== origParsed.h1P2) {
+            updated = updated.replace(/(data-i18n=["']hero_h1_p2["'][^>]*>)([\s\S]*?)(<\/span>)/i, `$1${escapeHtmlText(formVals.h1P2)}$3`);
+          }
+        } else if (formVals.h1Plain && formVals.h1Plain !== origParsed.h1Plain) {
+          updated = updated.replace(/(<h1\b[^>]*>)([\s\S]*?)(<\/h1>)/i, `$1${escapeHtmlText(formVals.h1Plain)}$3`);
+        }
+
+        // 8. Image Alt Tags (only if user changed specific image alts)
+        if (imgEdits && imgEdits.length > 0) {
+          const changedImgs = imgEdits.filter(img => img.alt !== img.originalAlt);
+          if (changedImgs.length > 0) {
+            changedImgs.forEach(img => {
+              let patchedTag;
+              if (/\balt\s*=\s*["'][^"']*["']/i.test(img.rawTag)) {
+                patchedTag = img.rawTag.replace(/\balt\s*=\s*(["'])[^"']*\1/i, `alt="${escapeAttr(img.alt)}"`);
+              } else {
+                patchedTag = img.rawTag.replace(/<img\b/i, `<img alt="${escapeAttr(img.alt)}"`);
+              }
+              updated = updated.replace(img.rawTag, patchedTag);
+            });
+          }
+        }
+
+        return updated;
+      }
+
+      // ================= SEO SCORE ENGINE =================
+      function computeSeoScore(vals, imgs) {
+        const checks = [];
+        let points = 0;
+        let maxPoints = 0;
+
+        function addCheck(ok, warn, weight, msg) {
+          maxPoints += weight;
+          if (ok) {
+            points += weight;
+            checks.push({ icon: '✅', text: msg });
+          } else if (warn) {
+            points += Math.round(weight * 0.55);
+            checks.push({ icon: '⚠️', text: msg });
+          } else {
+            checks.push({ icon: '❌', text: msg });
+          }
+        }
+
+        // Title
+        const tLen = (vals.title || '').trim().length;
+        addCheck(tLen >= 35 && tLen <= 65, tLen > 0 && tLen < 35 || (tLen > 65 && tLen <= 78), 20,
+          tLen === 0 ? 'Meta Title missing' : `Meta Title: ${tLen} chars (Ideal: 50–60)`);
+
+        // Description
+        const dLen = (vals.description || '').trim().length;
+        addCheck(dLen >= 115 && dLen <= 165, dLen >= 50 && dLen < 115 || (dLen > 165 && dLen <= 190), 20,
+          dLen === 0 ? 'Meta Description missing' : `Meta Description: ${dLen} chars (Ideal: 140–160)`);
+
+        // Canonical
+        addCheck(/^https?:\/\/.+/.test(vals.canonical || ''), false, 15,
+          vals.canonical ? 'Canonical URL properly set' : 'Canonical URL missing (Add to prevent duplicate indexing)');
+
+        // H1
+        const h1Text = vals.h1Mode === 'split' ? `${vals.h1P1} ${vals.h1P2}`.trim() : (vals.h1Plain || '').trim();
+        addCheck(h1Text.length >= 10, h1Text.length > 0, 15,
+          h1Text ? `Main H1 present (${h1Text.length} chars)` : 'No H1 heading detected');
+
+        // Open Graph
+        const ogOk = !!(vals.ogTitle && vals.ogDesc && vals.ogImage);
+        addCheck(ogOk, !!(vals.ogTitle || vals.ogDesc), 12,
+          ogOk ? 'Open Graph tags complete (WhatsApp/FB ready)' : 'Open Graph tags incomplete');
+
+        // Image Alts
+        const totalImgs = (imgs || []).length;
+        const missingAlts = (imgs || []).filter(i => !(i.alt || '').trim()).length;
+        addCheck(missingAlts === 0, missingAlts === 1, 10,
+          totalImgs === 0 ? 'No content images on page' : (missingAlts === 0 ? `All ${totalImgs} content images have Alt text` : `${missingAlts} of ${totalImgs} image(s) missing Alt text`));
+
+        // Keywords / Robots
+        const kwOk = (vals.keywords || '').trim().length > 0;
+        addCheck(kwOk, true, 8, kwOk ? 'Focus keywords configured' : 'Meta keywords empty (optional)');
+
+        const score = Math.round((points / maxPoints) * 100);
+        return { score, checks };
+      }
+
+      // ================= UI RENDERING =================
+      function renderSidebar() {
+        const ul = document.getElementById('html-pages-list');
+        ul.innerHTML = PAGES.map(p => {
+          const sc = scoresCache[p.file];
+          const chipClass = sc == null ? 'score-idle' : (sc >= 80 ? 'score-good' : (sc >= 55 ? 'score-warn' : 'score-bad'));
+          const chipText = sc == null ? '—' : `${sc}`;
+          return `
+            <li class="page-item ${activeFile === p.file && !activeTechFile ? 'active' : ''}" data-file="${p.file}" onclick="selectHtmlPage('${p.file}')">
+              <div class="page-item-left">
+                <span class="page-item-name">${p.name}</span>
+                <span class="page-item-file">${p.file}</span>
+              </div>
+              <span class="score-chip ${chipClass}" id="side-score-${p.file}">${chipText}</span>
+            </li>
+          `;
+        }).join('');
+      }
+
+      function highlightSidebar() {
+        document.querySelectorAll('.page-item').forEach(el => {
+          const f = el.getAttribute('data-file');
+          const isActive = activeTechFile ? (f === activeTechFile) : (f === activeFile);
+          el.classList.toggle('active', isActive);
+        });
+      }
+
+      function readFormValues() {
+        return {
+          title: document.getElementById('seo-title').value,
+          description: document.getElementById('seo-desc').value,
+          keywords: document.getElementById('seo-keywords').value,
+          canonical: document.getElementById('seo-canonical').value.trim(),
+          robots: document.getElementById('seo-robots').value,
+          ogTitle: document.getElementById('og-title').value,
+          ogDesc: document.getElementById('og-desc').value,
+          ogUrl: document.getElementById('og-url').value.trim(),
+          ogImage: document.getElementById('og-image').value.trim(),
+          twTitle: document.getElementById('tw-title').value,
+          twDesc: document.getElementById('tw-desc').value,
+          twImage: document.getElementById('tw-image').value.trim(),
+          h1Mode: originalParsed ? originalParsed.h1Mode : 'plain',
+          h1Plain: document.getElementById('seo-h1').value,
+          h1P1: document.getElementById('seo-h1-p1').value,
+          h1P2: document.getElementById('seo-h1-p2').value,
+          schema: document.getElementById('seo-schema').value
+        };
+      }
+
+      function populateForm(parsed) {
+        document.getElementById('seo-title').value = parsed.title;
+        document.getElementById('seo-desc').value = parsed.description;
+        document.getElementById('seo-keywords').value = parsed.keywords;
+        document.getElementById('seo-canonical').value = parsed.canonical;
+
+        const robSel = document.getElementById('seo-robots');
+        const robVal = parsed.robots.toLowerCase().replace(/\s+/g, ' ').trim();
+        let matched = false;
+        for (let opt of robSel.options) {
+          if (opt.value === robVal) { robSel.value = robVal; matched = true; break; }
+        }
+        if (!matched) robSel.value = 'index, follow';
+
+        document.getElementById('og-title').value = parsed.ogTitle;
+        document.getElementById('og-desc').value = parsed.ogDesc;
+        document.getElementById('og-url').value = parsed.ogUrl;
+        document.getElementById('og-image').value = parsed.ogImage;
+
+        document.getElementById('tw-title').value = parsed.twTitle;
+        document.getElementById('tw-desc').value = parsed.twDesc;
+        document.getElementById('tw-image').value = parsed.twImage;
+
+        // H1 mode
+        if (parsed.h1Mode === 'split') {
+          document.getElementById('h1-plain-wrap').style.display = 'none';
+          document.getElementById('h1-split-wrap').style.display = 'block';
+          document.getElementById('seo-h1-p1').value = parsed.h1P1;
+          document.getElementById('seo-h1-p2').value = parsed.h1P2;
+          document.getElementById('seo-h1').value = parsed.h1Plain;
+        } else {
+          document.getElementById('h1-plain-wrap').style.display = 'block';
+          document.getElementById('h1-split-wrap').style.display = 'none';
+          document.getElementById('seo-h1').value = parsed.h1Plain;
+        }
+
+        document.getElementById('seo-schema').value = parsed.schema;
+
+        // Images
+        currentImages = parsed.imgs.map(i => Object.assign({}, i));
+        renderImageAltEditor();
+        updateLivePreviewsAndScore();
+      }
+
+      function renderImageAltEditor() {
+        const container = document.getElementById('img-alts-container');
+        document.getElementById('cnt-alts').textContent = `${currentImages.length} image(s)`;
+        if (currentImages.length === 0) {
+          container.innerHTML = `<p class="field-hint">No visible content images found on this page.</p>`;
+          return;
+        }
+        container.innerHTML = currentImages.map((img, i) => `
+          <div class="img-alt-item">
+            <img src="${escapeAttr(img.src)}" alt="" class="img-alt-thumb" onerror="this.style.opacity='0.3'">
+            <div>
+              <div class="img-src-label">src: ${escapeHtmlText(img.src || '(empty)')}</div>
+              <input type="text" class="form-control" value="${escapeAttr(img.alt)}" placeholder="Describe this image with relevant keywords..." oninput="updateImageAlt(${i}, this.value)">
+            </div>
+          </div>
+        `).join('');
+      }
+
+      window.updateImageAlt = function (idx, val) {
+        if (currentImages[idx]) {
+          currentImages[idx].alt = val;
+          onFieldChange();
+        }
+      };
+
+      function updateCounter(id, len, minIdeal, maxIdeal, maxWarn) {
+        const el = document.getElementById(id);
+        el.textContent = `${len} / ${maxIdeal} chars`;
+        el.className = 'char-counter ' + (len >= minIdeal && len <= maxIdeal ? 'char-good' : (len > 0 && len <= maxWarn ? 'char-warn' : 'char-bad'));
+      }
+
+      function updateLivePreviewsAndScore() {
+        const v = readFormValues();
+        const pageObj = PAGES.find(p => p.file === activeFile) || PAGES[0];
+
+        // Counters
+        updateCounter('cnt-title', v.title.trim().length, 35, 60, 75);
+        updateCounter('cnt-desc', v.description.trim().length, 115, 160, 185);
+        document.getElementById('cnt-h1').textContent = `${v.h1Plain.trim().length} chars`;
+
+        // Keywords chips
+        const kws = v.keywords.split(',').map(s => s.trim()).filter(Boolean);
+        document.getElementById('cnt-kw').textContent = `${kws.length} keywords`;
+        document.getElementById('kw-chips').innerHTML = kws.slice(0, 14).map(k => `<span class="kw-chip">${escapeHtmlText(k)}</span>`).join('');
+
+        // Schema validation badge
+        const scEl = document.getElementById('schema-status');
+        if (!v.schema.trim()) {
+          scEl.textContent = 'No Schema';
+          scEl.className = 'char-counter';
+        } else {
+          try {
+            JSON.parse(v.schema);
+            scEl.textContent = 'Valid JSON-LD ✓';
+            scEl.className = 'char-counter char-good';
+          } catch (e) {
+            scEl.textContent = 'Invalid JSON ✗';
+            scEl.className = 'char-counter char-bad';
+          }
+        }
+
+        // Google SERP Preview
+        document.getElementById('serp-url-preview').textContent = v.canonical || (DOMAIN + pageObj.path);
+        document.getElementById('serp-title-preview').textContent = v.title.trim() || '(Untitled Page)';
+        document.getElementById('serp-desc-preview').textContent = v.description.trim() || 'Add a meta description to control how your page appears in Google search results.';
+
+        // Social Preview
+        document.getElementById('social-title-preview').textContent = v.ogTitle.trim() || v.title.trim() || 'BlueRay Wealth';
+        document.getElementById('social-desc-preview').textContent = v.ogDesc.trim() || v.description.trim() || 'Mutual Fund Guidance & Investor Education';
+        const imgPreview = document.getElementById('social-img-preview');
+        imgPreview.src = v.ogImage || 'blueray-wealth-logo.jpg';
+
+        // SEO Score
+        const { score, checks } = computeSeoScore(v, currentImages);
+        scoresCache[activeFile] = score;
+        const sideChip = document.getElementById(`side-score-${activeFile}`);
+        if (sideChip) {
+          sideChip.textContent = score;
+          sideChip.className = 'score-chip ' + (score >= 80 ? 'score-good' : (score >= 55 ? 'score-warn' : 'score-bad'));
+        }
+
+        const ring = document.getElementById('score-ring');
+        ring.textContent = score;
+        ring.className = 'score-ring' + (score >= 80 ? '' : (score >= 55 ? ' ring-warn' : ' ring-bad'));
+
+        const grade = document.getElementById('score-grade-label');
+        if (score >= 85) { grade.textContent = 'Excellent'; grade.className = 'score-chip score-good'; }
+        else if (score >= 65) { grade.textContent = 'Good'; grade.className = 'score-chip score-warn'; }
+        else { grade.textContent = 'Needs Work'; grade.className = 'score-chip score-bad'; }
+
+        document.getElementById('score-summary-title').textContent = `${score}/100 On-Page SEO Health`;
+        document.getElementById('live-audit-list').innerHTML = checks.map(c => `
+          <li class="audit-item"><span class="audit-icon">${c.icon}</span><span>${escapeHtmlText(c.text)}</span></li>
+        `).join('');
+      }
+
+      window.onFieldChange = function () {
+        hasUnsaved = true;
+        document.getElementById('unsaved-badge').classList.add('show');
+        updateLivePreviewsAndScore();
+      };
+
+      // ================= PAGE SWITCHING =================
+      window.selectHtmlPage = async function (fileName) {
+        if (hasUnsaved && !confirm('You have unsaved edits on the current page. Discard them and switch?')) {
+          return;
+        }
+        activeFile = fileName;
+        activeTechFile = null;
+        hasUnsaved = false;
+        document.getElementById('unsaved-badge').classList.remove('show');
+
+        document.getElementById('view-page-editor').style.display = 'block';
+        document.getElementById('view-tech-editor').style.display = 'none';
+        document.getElementById('view-site-audit').style.display = 'none';
+        highlightSidebar();
+
+        const p = PAGES.find(x => x.file === fileName) || { file: fileName, name: fileName, path: '/' + fileName };
+        document.getElementById('active-page-name').textContent = p.name;
+        document.getElementById('active-file-code').textContent = p.file;
+        const liveUrl = DOMAIN + p.path;
+        const urlEl = document.getElementById('active-live-url');
+        urlEl.href = liveUrl;
+        urlEl.textContent = liveUrl;
+
+        await reloadCurrentPage();
+      };
+
+      window.reloadCurrentPage = async function () {
+        try {
+          const data = await fetchFileContent(activeFile);
+          originalRawHtml = data.content;
+          originalSha = data.sha;
+          originalParsed = parseSeoFromHtml(originalRawHtml);
+          populateForm(originalParsed);
+          hasUnsaved = false;
+          document.getElementById('unsaved-badge').classList.remove('show');
+          if (isGhConnected()) loadCommitHistory();
+        } catch (err) {
+          showToast('❌ ' + err.message, 'toast-error');
+        }
+      };
+
+      window.switchInnerTab = function (tabName) {
+        document.querySelectorAll('.inner-tab').forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === tabName));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.getElementById('pane-' + tabName).classList.add('active');
+      };
+
+      window.setSerpMode = function (mode) {
+        const box = document.getElementById('serp-box');
+        box.classList.toggle('mobile', mode === 'mobile');
+        document.getElementById('serp-desktop-btn').className = 'btn btn-xs ' + (mode === 'desktop' ? 'btn-primary' : 'btn-outline');
+        document.getElementById('serp-mobile-btn').className = 'btn btn-xs ' + (mode === 'mobile' ? 'btn-primary' : 'btn-outline');
+      };
+
+      window.autoFillCanonical = function () {
+        const p = PAGES.find(x => x.file === activeFile);
+        if (!p) return;
+        document.getElementById('seo-canonical').value = DOMAIN + p.path;
+        onFieldChange();
+        showToast('Canonical URL auto-filled!');
+      };
+
+      window.syncSocialFromMeta = function () {
+        const p = PAGES.find(x => x.file === activeFile);
+        const title = document.getElementById('seo-title').value;
+        const desc = document.getElementById('seo-desc').value;
+        const canonical = document.getElementById('seo-canonical').value.trim() || (DOMAIN + (p ? p.path : '/'));
+        document.getElementById('og-title').value = title;
+        document.getElementById('og-desc').value = desc;
+        document.getElementById('og-url').value = canonical;
+        if (!document.getElementById('og-image').value) document.getElementById('og-image').value = 'blueray-wealth-logo.jpg';
+        document.getElementById('tw-title').value = title;
+        document.getElementById('tw-desc').value = desc;
+        if (!document.getElementById('tw-image').value) document.getElementById('tw-image').value = 'blueray-wealth-logo.jpg';
+        onFieldChange();
+        showToast('OG & Twitter tags synced from Core Meta!');
+      };
+
+      // ================= DIFF & PUBLISH =================
+      function computeDiffList(orig, curr, imgs) {
+        const fields = [
+          ['Meta Title', orig.title, curr.title],
+          ['Meta Description', orig.description, curr.description],
+          ['Meta Keywords', orig.keywords, curr.keywords],
+          ['Canonical URL', orig.canonical, curr.canonical],
+          ['Robots', orig.robots, curr.robots],
+          ['OG Title', orig.ogTitle, curr.ogTitle],
+          ['OG Description', orig.ogDesc, curr.ogDesc],
+          ['OG URL', orig.ogUrl, curr.ogUrl],
+          ['OG Image', orig.ogImage, curr.ogImage],
+          ['Twitter Title', orig.twTitle, curr.twTitle],
+          ['Twitter Description', orig.twDesc, curr.twDesc],
+          ['Twitter Image', orig.twImage, curr.twImage]
+        ];
+        if (orig.h1Mode === 'split') {
+          fields.push(['H1 Line 1', orig.h1P1, curr.h1P1]);
+          fields.push(['H1 Line 2', orig.h1P2, curr.h1P2]);
+        } else {
+          fields.push(['H1 Heading', orig.h1Plain, curr.h1Plain]);
+        }
+        if ((orig.schema || '').trim() !== (curr.schema || '').trim()) {
+          fields.push(['JSON-LD Schema', '(previous schema)', '(updated JSON-LD schema)']);
+        }
+        imgs.forEach(img => {
+          if (img.alt !== img.originalAlt) {
+            fields.push([`Image Alt (${img.src})`, img.originalAlt, img.alt]);
+          }
+        });
+        return fields.filter(([, a, b]) => (a || '') !== (b || ''));
+      }
+
+      window.openDiffModal = function (forPublish = false) {
+        if (!originalParsed) return;
+        const curr = readFormValues();
+
+        // Block invalid JSON-LD before publish
+        if (curr.schema.trim()) {
+          try { JSON.parse(curr.schema); }
+          catch (e) {
+            showToast('❌ Invalid JSON-LD Schema syntax! Fix it before publishing.', 'toast-error');
+            switchInnerTab('schema');
+            return;
+          }
+        }
+
+        const diffs = computeDiffList(originalParsed, curr, currentImages);
+        const diffEl = document.getElementById('diff-content');
+        document.getElementById('diff-modal-title').textContent = forPublish
+          ? `🚀 Confirm Live Publish — ${activeFile}`
+          : `🔍 Review Changes — ${activeFile}`;
+
+        if (diffs.length === 0) {
+          diffEl.innerHTML = `<p style="color:var(--text-muted); font-size:0.88rem;">No SEO changes detected on <strong>${activeFile}</strong> yet.</p>`;
+          document.getElementById('confirm-publish-btn').disabled = true;
+        } else {
+          diffEl.innerHTML = `<p style="font-size:0.83rem; color:var(--text-secondary); margin-bottom:12px;">Sirf niche diye gaye <strong>${diffs.length} SEO tag(s)</strong> update honge. Baaki design, GTM, Meta Pixel aur forms bilkul untouched rahenge:</p>` +
+            diffs.map(([label, oldVal, newVal]) => `
+              <div class="diff-item">
+                <div class="diff-label">${escapeHtmlText(label)}</div>
+                <div class="diff-old"><strong>Before:</strong> ${escapeHtmlText(oldVal || '(empty)')}</div>
+                <div class="diff-new"><strong>After:</strong> ${escapeHtmlText(newVal || '(removed)')}</div>
+              </div>
+            `).join('');
+          document.getElementById('confirm-publish-btn').disabled = false;
+        }
+
+        document.getElementById('commit-msg-input').value = `seo(${activeFile.replace('.html', '')}): update on-page SEO tags via SEO Admin Panel`;
+        document.getElementById('diff-modal').classList.add('open');
+      };
+
+      window.executePublishCurrentPage = async function () {
+        if (!isGhConnected()) {
+          closeModal('diff-modal');
+          openGithubModal();
+          showToast('Connect your GitHub Token once for 1-click live publish.', 'toast-error');
+          return;
+        }
+
+        const btn = document.getElementById('confirm-publish-btn');
+        btn.disabled = true;
+        btn.textContent = 'Publishing...';
+
+        try {
+          const vals = readFormValues();
+          const updatedHtml = buildUpdatedHtml(originalRawHtml, vals, originalParsed, currentImages);
+          const msg = document.getElementById('commit-msg-input').value.trim() || `seo: update ${activeFile}`;
+          await commitFileToGithub(activeFile, updatedHtml, msg);
+
+          originalRawHtml = updatedHtml;
+          originalParsed = parseSeoFromHtml(updatedHtml);
+          currentImages = originalParsed.imgs.map(i => Object.assign({}, i));
+          hasUnsaved = false;
+          document.getElementById('unsaved-badge').classList.remove('show');
+          closeModal('diff-modal');
+          showToast(`🚀 Published ${activeFile}! Live on blueraywealth.com in ~30-60 sec.`, 'toast-success');
+          loadCommitHistory();
+        } catch (err) {
+          showToast('❌ Publish failed: ' + err.message, 'toast-error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '🚀 Confirm & Publish Live';
+        }
+      };
+
+      window.downloadCurrentFile = function () {
+        if (!originalRawHtml || !originalParsed) return;
+        const updatedHtml = buildUpdatedHtml(originalRawHtml, readFormValues(), originalParsed, currentImages);
+        triggerDownload(activeFile, updatedHtml, 'text/html');
+        showToast(`📥 Downloaded updated ${activeFile}`, 'toast-success');
+      };
+
+      function triggerDownload(filename, content, mime) {
+        const blob = new Blob([content], { type: `${mime};charset=utf-8` });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+      }
+
+      // ================= TECHNICAL FILES (SITEMAP / ROBOTS) =================
+      window.selectSpecialFile = async function (fileName) {
+        activeTechFile = fileName;
+        document.getElementById('view-page-editor').style.display = 'none';
+        document.getElementById('view-site-audit').style.display = 'none';
+        document.getElementById('view-tech-editor').style.display = 'block';
+        highlightSidebar();
+
+        document.getElementById('tech-file-title').textContent = fileName === 'sitemap.xml' ? '🗺️ sitemap.xml' : '🤖 robots.txt';
+        document.getElementById('tech-editor-label').textContent = `Editing ${fileName}`;
+        document.getElementById('tech-file-content').value = 'Loading...';
+
+        try {
+          const data = await fetchFileContent(fileName);
+          document.getElementById('tech-file-content').value = data.content;
+        } catch (err) {
+          document.getElementById('tech-file-content').value = '';
+          showToast('❌ ' + err.message, 'toast-error');
+        }
+      };
+
+      window.downloadTechFile = function () {
+        if (!activeTechFile) return;
+        triggerDownload(activeTechFile, document.getElementById('tech-file-content').value, 'text/plain');
+        showToast(`📥 Downloaded ${activeTechFile}`, 'toast-success');
+      };
+
+      window.publishTechFile = async function () {
+        if (!activeTechFile) return;
+        if (!isGhConnected()) {
+          openGithubModal();
+          return;
+        }
+        const content = document.getElementById('tech-file-content').value;
+        try {
+          await commitFileToGithub(activeTechFile, content, `seo: update ${activeTechFile} via SEO Admin Panel`);
+          showToast(`🚀 Published ${activeTechFile} live!`, 'toast-success');
+        } catch (err) {
+          showToast('❌ ' + err.message, 'toast-error');
+        }
+      };
+
+      // ================= COMMIT HISTORY =================
+      window.loadCommitHistory = async function () {
+        const listEl = document.getElementById('commit-history-list');
+        if (!isGhConnected()) {
+          listEl.innerHTML = `<p class="field-hint">GitHub connect karne par recent live SEO updates yahan dikhenge.</p>`;
+          return;
+        }
+        const cfg = getGhConfig();
+        try {
+          const res = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/commits?path=${encodeURIComponent(activeFile)}&per_page=5`, {
+            headers: {
+              'Authorization': `Bearer ${cfg.token}`,
+              'Accept': 'application/vnd.github+json'
+            }
+          });
+          if (!res.ok) throw new Error('Could not load commits');
+          const commits = await res.json();
+          if (!commits.length) {
+            listEl.innerHTML = `<p class="field-hint">No commits found.</p>`;
+            return;
+          }
+          listEl.innerHTML = commits.map(c => {
+            const dt = new Date(c.commit.author.date).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            return `
+              <div class="commit-row">
+                <div>
+                  <div style="font-weight:600; color:var(--text);">${escapeHtmlText(c.commit.message)}</div>
+                  <div style="font-size:0.74rem; color:var(--text-muted);">${dt} • <code>${c.sha.slice(0, 7)}</code></div>
+                </div>
+                <a href="${c.html_url}" target="_blank" rel="noopener noreferrer" class="btn btn-xs btn-outline">View</a>
+              </div>
+            `;
+          }).join('');
+        } catch (e) {
+          listEl.innerHTML = `<p class="field-hint">Could not fetch commit history.</p>`;
+        }
+      };
+
+      // ================= SITE-WIDE AUDIT =================
+      window.openSiteAuditView = function () {
+        document.getElementById('view-page-editor').style.display = 'none';
+        document.getElementById('view-tech-editor').style.display = 'none';
+        document.getElementById('view-site-audit').style.display = 'block';
+        runFullSiteAudit();
+      };
+
+      window.runFullSiteAudit = async function () {
+        const tbody = document.getElementById('site-audit-tbody');
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:26px;">Scanning all ${PAGES.length} pages...</td></tr>`;
+        const rows = [];
+
+        for (const p of PAGES) {
+          try {
+            const data = await fetchFileContent(p.file);
+            const parsed = parseSeoFromHtml(data.content);
+            const { score } = computeSeoScore(parsed, parsed.imgs);
+            scoresCache[p.file] = score;
+
+            const chipClass = score >= 80 ? 'score-good' : (score >= 55 ? 'score-warn' : 'score-bad');
+            rows.push(`
+              <tr>
+                <td><strong>${p.name}</strong><br><code style="font-size:0.73rem; color:var(--text-muted);">${p.file}</code></td>
+                <td>${parsed.title ? `${parsed.title.length} chars` : '<span style="color:var(--danger);">Missing</span>'}</td>
+                <td>${parsed.description ? `${parsed.description.length} chars` : '<span style="color:var(--danger);">Missing</span>'}</td>
+                <td>${parsed.canonical ? '<span class="score-chip score-good">Set ✓</span>' : '<span class="score-chip score-bad">Missing</span>'}</td>
+                <td>${parsed.ogTitle && parsed.ogDesc ? '<span class="score-chip score-good">OK ✓</span>' : '<span class="score-chip score-warn">Partial</span>'}</td>
+                <td><span class="score-chip ${chipClass}">${score}/100</span></td>
+                <td><button class="btn btn-xs btn-primary" onclick="selectHtmlPage('${p.file}')">Edit SEO →</button></td>
+              </tr>
+            `);
+          } catch (e) {
+            rows.push(`<tr><td>${p.name}</td><td colspan="6" style="color:var(--danger);">Error loading ${p.file}</td></tr>`);
+          }
+        }
+        tbody.innerHTML = rows.join('');
+        renderSidebar();
+      };
+
+      // ================= INIT =================
+      if (sessionStorage.getItem('blueray_seo_auth') === 'true') {
+        unlockShell();
+      }
+    })();
+  </script>
+</body>
+</html>
