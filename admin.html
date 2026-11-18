@@ -437,12 +437,22 @@
       <h2 class="auth-title">BlueRay Wealth Portal</h2>
       <p class="auth-subtitle">Suresh Saini (ARN-347947) • Admin Dashboard</p>
       
-      <form id="auth-form" onsubmit="return handleLogin(event);">
-        <label for="admin-pin-input" class="form-label" style="text-align:center;">Enter 4-Digit Security PIN</label>
-        <input type="password" id="admin-pin-input" class="pin-input" maxlength="8" placeholder="••••" autofocus required>
-        <button type="submit" class="btn btn-primary" id="login-btn">Unlock Dashboard</button>
-        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:14px;">
-        <strong></strong>
+      <form id="auth-form" onsubmit="return handleLogin(event);" style="text-align:left;">
+        <div class="form-group" style="margin-bottom:14px;">
+          <label for="admin-username-input" class="form-label">Username</label>
+          <input type="text" id="admin-username-input" class="form-control" placeholder="Enter admin username" autocomplete="username" autofocus required>
+        </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="admin-password-input" class="form-label">Password</label>
+          <div style="position:relative;">
+            <input type="password" id="admin-password-input" class="form-control" placeholder="Enter admin password" autocomplete="current-password" style="padding-right:40px;" required>
+            <button type="button" onclick="toggleAdminPassVis('admin-password-input', this)" aria-label="Show password" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:0.95rem; color:var(--text-muted);">👁️</button>
+          </div>
+        </div>
+        <div id="admin-login-error" style="display:none; color:#B91C1C; background:#FEF2F2; border:1px solid #FECACA; padding:8px 12px; border-radius:8px; font-size:0.82rem; font-weight:600; margin-bottom:14px;"></div>
+        <button type="submit" class="btn btn-primary" id="login-btn" style="width:100%;">🔓 Sign In to Dashboard</button>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:14px; text-align:center;">
+          Synced across all devices • Shared with SEO Admin Panel
         </p>
       </form>
     </div>
@@ -461,6 +471,9 @@
         </div>
       </div>
       <div class="header-actions">
+        <a href="seo-admin.html" class="btn btn-sm btn-outline" style="color:white; border-color:rgba(255,255,255,0.3); text-decoration:none;">
+          <span>🔍 On-Page SEO Panel</span>
+        </a>
         <a href="index.html" target="_blank" class="btn btn-sm btn-accent" style="text-decoration:none;">
           <span>🌐 View Live Website</span>
         </a>
@@ -632,25 +645,60 @@
             </div>
           </div>
 
-          <!-- Security Settings -->
+          <!-- Security Settings (Cross-Device Sync) -->
           <div class="settings-card">
             <div class="settings-card-header">
               <span style="font-size:1.4rem;">🔒</span>
-              <h3 class="settings-card-title">Portal Security</h3>
+              <h3 class="settings-card-title">Portal Security (All-Device Sync)</h3>
+            </div>
+
+            <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:10px 12px; margin-bottom:14px; font-size:0.78rem; color:#1E3A8A;">
+              <strong>🌐 Har Device Par Same Login:</strong> Yahan Username/Password change karne par yeh seedha GitHub (<code>admin-auth.json</code>) par SHA-256 encrypted sync hota hai — har phone/laptop par turant naya login kaam karega.
+              <div style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+                <span id="admin-gh-status" style="font-weight:700;">Checking GitHub sync...</span>
+                <button type="button" onclick="openAdminGhModal()" class="btn btn-sm btn-outline" style="padding:4px 10px; font-size:0.74rem;">🔑 Connect GitHub</button>
+              </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label" for="cfg-pin">Admin Security PIN</label>
-              <input type="text" id="cfg-pin" class="form-control" placeholder="4 to 8 digit PIN">
-              <span style="font-size:0.75rem; color:var(--text-muted);">This PIN protects your Admin Dashboard.</span>
+              <label class="form-label" for="sec-curr-user">Current Username</label>
+              <input type="text" id="sec-curr-user" class="form-control" placeholder="Current username">
             </div>
 
-            <div style="margin-top: 24px;">
+            <div class="form-group">
+              <label class="form-label" for="sec-curr-pass">Current Password</label>
+              <input type="password" id="sec-curr-pass" class="form-control" placeholder="Verify current password">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sec-new-user">New Custom Username</label>
+              <input type="text" id="sec-new-user" class="form-control" placeholder="e.g. sureshsaini">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sec-new-pass">New Custom Password (min 6 chars)</label>
+              <input type="password" id="sec-new-pass" class="form-control" placeholder="Enter strong new password">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sec-confirm-pass">Confirm New Password</label>
+              <input type="password" id="sec-confirm-pass" class="form-control" placeholder="Re-enter new password">
+            </div>
+
+            <div id="sec-error-box" style="display:none; color:#B91C1C; background:#FEF2F2; border:1px solid #FECACA; padding:8px 10px; border-radius:6px; font-size:0.78rem; font-weight:600; margin-bottom:10px;"></div>
+
+            <button type="button" id="sec-update-btn" onclick="updateAdminCredentials()" class="btn btn-primary" style="width:100%; margin-bottom:14px;">
+              🔐 Update Login &amp; Sync All Devices
+            </button>
+
+            <hr style="border:none; border-top:1px solid var(--border); margin:14px 0;">
+
+            <div>
               <button onclick="saveSettings()" class="btn btn-accent" style="width:100%;">
-                💾 Save All Changes
+                💾 Save Profile &amp; Contact Changes
               </button>
               <button onclick="resetSettings()" class="btn btn-outline" style="width:100%; margin-top:8px;">
-                ↺ Reset to Defaults
+                ↺ Reset Profile to Defaults
               </button>
             </div>
           </div>
@@ -661,17 +709,57 @@
     </main>
   </div>
 
+  <!-- GitHub Sync Modal (shared token with seo-admin.html) -->
+  <div id="admin-gh-modal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; align-items:center; justify-content:center; padding:18px;">
+    <div style="background:#fff; border-radius:14px; max-width:520px; width:100%; padding:24px; box-shadow:0 20px 50px rgba(0,0,0,0.3); max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 style="color:var(--primary); font-size:1.05rem;">🔑 Connect GitHub (All-Device Sync)</h3>
+        <button type="button" onclick="closeAdminGhModal()" style="background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+      </div>
+      <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:8px; padding:12px; font-size:0.8rem; color:#475569; margin-bottom:14px;">
+        <strong>1-Time Setup:</strong> GitHub par <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer" style="color:#2563EB; font-weight:600;">Fine-Grained Token</a> banayein → Repo: <code>blueraywealth</code> → Permission: <code>Contents: Read and write</code> → Token paste karein. (Yeh same token SEO Panel me bhi kaam karega.)
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="agh-owner">GitHub Owner</label>
+        <input type="text" id="agh-owner" class="form-control" value="Developer-Satish-27">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="agh-repo">Repository</label>
+        <input type="text" id="agh-repo" class="form-control" value="blueraywealth">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="agh-branch">Branch</label>
+        <input type="text" id="agh-branch" class="form-control" value="main">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="agh-token">Personal Access Token (PAT)</label>
+        <input type="password" id="agh-token" class="form-control" placeholder="github_pat_... or ghp_...">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
+        <button type="button" onclick="closeAdminGhModal()" class="btn btn-sm btn-outline">Cancel</button>
+        <button type="button" id="agh-save-btn" onclick="saveAdminGhConfig()" class="btn btn-sm btn-primary">✓ Verify &amp; Save</button>
+      </div>
+    </div>
+  </div>
+
   <div id="admin-toast"></div>
 
   <!-- Include Core Modules -->
   <script src="site-config.js"></script>
+  <script src="admin-auth.js"></script>
   <script src="leads-manager.js"></script>
   <script>
-    // Authentication State
-    const AUTH_SESSION_KEY = 'blueray_admin_authenticated';
+    // Cross-Device Authentication State (powered by admin-auth.js)
+    function toggleAdminPassVis(inputId, btn) {
+      const inp = document.getElementById(inputId);
+      if (!inp) return;
+      const isPass = inp.type === 'password';
+      inp.type = isPass ? 'text' : 'password';
+      if (btn) btn.textContent = isPass ? '🙈' : '👁️';
+    }
 
     function initAuth() {
-      if (sessionStorage.getItem(AUTH_SESSION_KEY) === 'true') {
+      if (window.AdminAuth && window.AdminAuth.isAuthenticated()) {
         showAdminShell();
       } else {
         document.getElementById('auth-screen').style.display = 'flex';
@@ -679,30 +767,138 @@
       }
     }
 
-    function handleLogin(e) {
+    async function handleLogin(e) {
       if (e) e.preventDefault();
-      const enteredPin = document.getElementById('admin-pin-input').value.trim();
-      const cfg = SiteConfig.get();
-      const correctPin = cfg.adminPin || '2710';
+      const userEl = document.getElementById('admin-username-input');
+      const passEl = document.getElementById('admin-password-input');
+      const errEl = document.getElementById('admin-login-error');
+      const btn = document.getElementById('login-btn');
 
-      if (enteredPin === correctPin) {
-        sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
-        showAdminShell();
-        toast('Logged in successfully!');
-      } else {
-        alert('Invalid Security PIN. Please try again.');
-        document.getElementById('admin-pin-input').value = '';
-        document.getElementById('admin-pin-input').focus();
+      errEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+
+      try {
+        const res = await window.AdminAuth.verifyCredentials(userEl.value, passEl.value);
+        if (res.valid) {
+          window.AdminAuth.setAuthenticated(res.username);
+          passEl.value = '';
+          showAdminShell();
+          toast('Logged in successfully!');
+        } else {
+          errEl.textContent = '❌ ' + (res.error || 'Invalid username or password.');
+          errEl.style.display = 'block';
+          passEl.value = '';
+          passEl.focus();
+        }
+      } catch (err) {
+        errEl.textContent = '❌ Login error: ' + err.message;
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔓 Sign In to Dashboard';
       }
       return false;
     }
 
     function handleLogout() {
-      sessionStorage.removeItem(AUTH_SESSION_KEY);
-      document.getElementById('admin-pin-input').value = '';
+      window.AdminAuth.logout();
+      document.getElementById('admin-password-input').value = '';
       document.getElementById('auth-screen').style.display = 'flex';
       document.getElementById('admin-shell').style.display = 'none';
       toast('Logged out.');
+    }
+
+    function updateAdminGhStatusUI() {
+      const el = document.getElementById('admin-gh-status');
+      if (!el || !window.AdminAuth) return;
+      if (window.AdminAuth.isGhConnected()) {
+        el.innerHTML = '<span style="color:#059669;">🟢 GitHub Connected (All-Device Sync Ready)</span>';
+      } else {
+        el.innerHTML = '<span style="color:#B45309;">🟡 Connect GitHub Token to sync changes across devices</span>';
+      }
+    }
+
+    function openAdminGhModal() {
+      const cfg = window.AdminAuth.getGhConfig();
+      document.getElementById('agh-owner').value = cfg.owner;
+      document.getElementById('agh-repo').value = cfg.repo;
+      document.getElementById('agh-branch').value = cfg.branch;
+      document.getElementById('agh-token').value = cfg.token;
+      document.getElementById('admin-gh-modal').style.display = 'flex';
+    }
+
+    function closeAdminGhModal() {
+      document.getElementById('admin-gh-modal').style.display = 'none';
+    }
+
+    async function saveAdminGhConfig() {
+      const owner = document.getElementById('agh-owner').value.trim();
+      const repo = document.getElementById('agh-repo').value.trim();
+      const branch = document.getElementById('agh-branch').value.trim() || 'main';
+      const token = document.getElementById('agh-token').value.trim();
+      if (!owner || !repo || !token) { alert('Please fill Owner, Repo, and Token.'); return; }
+      const btn = document.getElementById('agh-save-btn');
+      btn.disabled = true; btn.textContent = 'Verifying...';
+      try {
+        const r = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+          headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+        });
+        if (!r.ok) throw new Error('Invalid token or repository permissions.');
+        window.AdminAuth.saveGhConfig({ owner, repo, branch, token });
+        updateAdminGhStatusUI();
+        closeAdminGhModal();
+        toast('✅ GitHub Connected! Cross-device sync enabled.');
+      } catch (err) {
+        alert('❌ ' + err.message);
+      } finally {
+        btn.disabled = false; btn.textContent = '✓ Verify & Save';
+      }
+    }
+
+    async function updateAdminCredentials() {
+      const currUser = document.getElementById('sec-curr-user').value.trim();
+      const currPass = document.getElementById('sec-curr-pass').value;
+      const newUser = document.getElementById('sec-new-user').value.trim();
+      const newPass = document.getElementById('sec-new-pass').value;
+      const confPass = document.getElementById('sec-confirm-pass').value;
+      const errEl = document.getElementById('sec-error-box');
+      const btn = document.getElementById('sec-update-btn');
+
+      errEl.style.display = 'none';
+      if (!currUser || !currPass || !newUser || !newPass) {
+        errEl.textContent = 'Please fill all fields.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (newPass !== confPass) {
+        errEl.textContent = 'New Password and Confirm Password do not match.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Syncing to all devices...';
+      try {
+        await window.AdminAuth.updateCredentialsLive(currUser, currPass, newUser, newPass);
+        document.getElementById('sec-curr-user').value = newUser.toLowerCase();
+        document.getElementById('sec-curr-pass').value = '';
+        document.getElementById('sec-new-user').value = newUser.toLowerCase();
+        document.getElementById('sec-new-pass').value = '';
+        document.getElementById('sec-confirm-pass').value = '';
+        toast('✅ Login updated & synced across ALL devices!');
+      } catch (err) {
+        if (err.code === 'GITHUB_NOT_CONNECTED') {
+          openAdminGhModal();
+          toast('Connect GitHub Token once to sync login across all devices.');
+        } else {
+          errEl.textContent = '❌ ' + err.message;
+          errEl.style.display = 'block';
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔐 Update Login & Sync All Devices';
+      }
     }
 
     function showAdminShell() {
@@ -710,6 +906,14 @@
       document.getElementById('admin-shell').style.display = 'block';
       renderLeadsTable();
       populateSettingsForm();
+      updateAdminGhStatusUI();
+      const sessUser = window.AdminAuth.getSessionUsername();
+      if (sessUser) {
+        const cu = document.getElementById('sec-curr-user');
+        const nu = document.getElementById('sec-new-user');
+        if (cu && !cu.value) cu.value = sessUser;
+        if (nu && !nu.value) nu.value = sessUser;
+      }
     }
 
     // Navigation Tabs
@@ -866,7 +1070,6 @@
       document.getElementById('cfg-whatsapp').value = cfg.whatsappNumber || '';
       document.getElementById('cfg-email').value = cfg.notificationEmail || '';
       document.getElementById('cfg-web3forms').value = cfg.web3FormsKey || '';
-      document.getElementById('cfg-pin').value = cfg.adminPin || '2710';
     }
 
     function saveSettings() {
@@ -879,8 +1082,7 @@
         phone: document.getElementById('cfg-phone').value.trim(),
         whatsappNumber: document.getElementById('cfg-whatsapp').value.trim(),
         notificationEmail: document.getElementById('cfg-email').value.trim(),
-        web3FormsKey: document.getElementById('cfg-web3forms').value.trim(),
-        adminPin: document.getElementById('cfg-pin').value.trim() || '2710'
+        web3FormsKey: document.getElementById('cfg-web3forms').value.trim()
       };
 
       SiteConfig.save(newCfg);

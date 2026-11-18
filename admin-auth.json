@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "algorithm": "SHA-256",
+  "salt": "brw_a7d3f91c4e82b506",
+  "usernameHash": "eb6b770e38b32c4133df09bea9c7ed7f8324087cea6157b554e7ddacd63e9e0d",
+  "credentialHash": "3235c2e84ab779c4ffd14d4c276e35b7255766b9e5371632c211f37722a82ea7",
+  "updatedAt": "2026-11-18T12:44:35.892Z"
+}

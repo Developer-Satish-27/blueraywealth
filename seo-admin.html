@@ -668,19 +668,30 @@
 </head>
 <body>
 
-  <!-- ================= PIN LOGIN SCREEN ================= -->
+  <!-- ================= USERNAME + PASSWORD LOGIN SCREEN ================= -->
   <div id="auth-screen">
     <div class="auth-card">
       <img src="blueray-wealth-logo.jpg" alt="BlueRay Wealth" class="auth-logo">
       <div><span class="auth-badge">Zero-Backend SEO Studio</span></div>
       <h1 class="auth-title">On-Page SEO Admin Panel</h1>
-      <p class="auth-sub">BlueRay Wealth (blueraywealth.com)<br>Enter your Admin Security PIN to manage live SEO.</p>
-      <form id="auth-form" onsubmit="return handlePinLogin(event);">
-        <input type="password" id="pin-input" class="pin-input" maxlength="8" placeholder="••••" autofocus required>
-        <button type="submit" class="btn btn-primary btn-full">🔓 Unlock SEO Panel</button>
+      <p class="auth-sub">BlueRay Wealth (blueraywealth.com)<br>Sign in with your Admin Username &amp; Password.</p>
+      <form id="auth-form" onsubmit="return handleCredentialLogin(event);" style="text-align:left;">
+        <div class="field-group" style="margin-bottom:14px;">
+          <label class="field-label" for="login-username" style="display:block; margin-bottom:5px;">Username</label>
+          <input type="text" id="login-username" class="form-control" placeholder="Enter admin username" autocomplete="username" autofocus required>
+        </div>
+        <div class="field-group" style="margin-bottom:18px;">
+          <label class="field-label" for="login-password" style="display:block; margin-bottom:5px;">Password</label>
+          <div style="position:relative;">
+            <input type="password" id="login-password" class="form-control" placeholder="Enter admin password" autocomplete="current-password" style="padding-right:42px;" required>
+            <button type="button" onclick="togglePassVis('login-password', this)" aria-label="Show password" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:0.95rem; color:var(--text-muted);">👁️</button>
+          </div>
+        </div>
+        <div id="login-error" style="display:none; color:var(--danger); background:var(--danger-bg); border:1px solid #FECACA; padding:8px 12px; border-radius:8px; font-size:0.82rem; font-weight:600; margin-bottom:14px;"></div>
+        <button type="submit" class="btn btn-primary btn-full" id="login-submit-btn">🔓 Sign In to SEO Panel</button>
       </form>
-      <p style="font-size:0.76rem; color:var(--text-muted); margin-top:14px;">
-        Uses the same Admin PIN as <code>admin.html</code>.
+      <p style="font-size:0.75rem; color:var(--text-muted); margin-top:14px;">
+        Synced across all devices • Shared with <code>admin.html</code>
       </p>
     </div>
   </div>
@@ -702,6 +713,9 @@
         <button class="gh-status-pill" id="gh-status-pill" onclick="openGithubModal()">
           <span class="status-dot dot-amber" id="gh-status-dot"></span>
           <span id="gh-status-text">Connect GitHub for 1-Click Live Publish</span>
+        </button>
+        <button onclick="openChangeAuthModal()" class="btn btn-sm btn-outline" style="background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.25);">
+          🔐 Change Login
         </button>
         <a href="admin.html" class="btn btn-sm btn-outline" style="background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.25);">
           📥 Leads Admin
@@ -1148,11 +1162,53 @@
     </div>
   </div>
 
+  <!-- ================= MODAL: CHANGE USERNAME & PASSWORD (ALL DEVICES SYNC) ================= -->
+  <div class="modal-backdrop" id="change-auth-modal">
+    <div class="modal-box" style="max-width:500px;">
+      <div class="modal-head">
+        <h3>🔐 Change Admin Username &amp; Password</h3>
+        <button class="modal-close" onclick="closeModal('change-auth-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="guide-steps" style="margin-bottom:14px;">
+          <strong>🌐 All-Device Live Sync:</strong> Yahan change kiya gaya Username aur Password SHA-256 encrypted hash ke roop me <code>admin-auth.json</code> par save hoga — aur <strong>har device</strong> (Mobile, Laptop, PC) par same new login automatically kaam karega (dono <code>admin.html</code> aur <code>seo-admin.html</code> me).
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="chg-curr-user">Current Username</label>
+          <input type="text" id="chg-curr-user" class="form-control" placeholder="Current username">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="chg-curr-pass">Current Password</label>
+          <input type="password" id="chg-curr-pass" class="form-control" placeholder="Verify current password">
+        </div>
+        <hr style="border:none; border-top:1px solid var(--border); margin:16px 0;">
+        <div class="field-group">
+          <label class="field-label" for="chg-new-user">New Custom Username</label>
+          <input type="text" id="chg-new-user" class="form-control" placeholder="e.g. sureshsaini">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="chg-new-pass">New Custom Password (min 6 characters)</label>
+          <input type="password" id="chg-new-pass" class="form-control" placeholder="Enter strong new password">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="chg-confirm-pass">Confirm New Password</label>
+          <input type="password" id="chg-confirm-pass" class="form-control" placeholder="Re-enter new password">
+        </div>
+        <div id="chg-auth-error" style="display:none; color:var(--danger); background:var(--danger-bg); border:1px solid #FECACA; padding:8px 12px; border-radius:8px; font-size:0.82rem; font-weight:600; margin-top:10px;"></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('change-auth-modal')">Cancel</button>
+        <button type="button" class="btn btn-success btn-sm" id="chg-auth-save-btn" onclick="handleUpdateCredentials()">🚀 Save &amp; Sync All Devices</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast"></div>
 
-  <!-- Load shared SiteConfig (for Admin PIN) -->
+  <!-- Load shared SiteConfig & Cross-Device Auth -->
   <script src="site-config.js"></script>
+  <script src="admin-auth.js"></script>
 
   <script>
     (function () {
@@ -1245,29 +1301,103 @@
         toastTimer = setTimeout(() => { el.className = ''; }, 3600);
       }
 
-      // ================= AUTH =================
-      function getPin() {
-        if (window.SiteConfig) return window.SiteConfig.get().adminPin || '2710';
-        return '2710';
-      }
+      // ================= CROSS-DEVICE AUTH =================
+      window.togglePassVis = function (inputId, btn) {
+        const inp = document.getElementById(inputId);
+        if (!inp) return;
+        const isPass = inp.type === 'password';
+        inp.type = isPass ? 'text' : 'password';
+        if (btn) btn.textContent = isPass ? '🙈' : '👁️';
+      };
 
-      window.handlePinLogin = function (e) {
+      window.handleCredentialLogin = async function (e) {
         e.preventDefault();
-        const entered = document.getElementById('pin-input').value.trim();
-        if (entered === getPin()) {
-          sessionStorage.setItem('blueray_seo_auth', 'true');
-          unlockShell();
-        } else {
-          showToast('❌ Incorrect PIN. Please try again.', 'toast-error');
-          document.getElementById('pin-input').value = '';
-          document.getElementById('pin-input').focus();
+        const userEl = document.getElementById('login-username');
+        const passEl = document.getElementById('login-password');
+        const errEl = document.getElementById('login-error');
+        const btn = document.getElementById('login-submit-btn');
+
+        errEl.style.display = 'none';
+        btn.disabled = true;
+        btn.textContent = 'Verifying...';
+
+        try {
+          const result = await window.AdminAuth.verifyCredentials(userEl.value, passEl.value);
+          if (result.valid) {
+            window.AdminAuth.setAuthenticated(result.username);
+            passEl.value = '';
+            unlockShell();
+          } else {
+            errEl.textContent = '❌ ' + (result.error || 'Invalid username or password.');
+            errEl.style.display = 'block';
+            passEl.value = '';
+            passEl.focus();
+          }
+        } catch (err) {
+          errEl.textContent = '❌ Login error: ' + err.message;
+          errEl.style.display = 'block';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '🔓 Sign In to SEO Panel';
         }
         return false;
       };
 
       window.handleLogout = function () {
-        sessionStorage.removeItem('blueray_seo_auth');
+        window.AdminAuth.logout();
         location.reload();
+      };
+
+      window.openChangeAuthModal = function () {
+        document.getElementById('chg-curr-user').value = window.AdminAuth.getSessionUsername() || '';
+        document.getElementById('chg-curr-pass').value = '';
+        document.getElementById('chg-new-user').value = window.AdminAuth.getSessionUsername() || '';
+        document.getElementById('chg-new-pass').value = '';
+        document.getElementById('chg-confirm-pass').value = '';
+        document.getElementById('chg-auth-error').style.display = 'none';
+        document.getElementById('change-auth-modal').classList.add('open');
+      };
+
+      window.handleUpdateCredentials = async function () {
+        const currUser = document.getElementById('chg-curr-user').value.trim();
+        const currPass = document.getElementById('chg-curr-pass').value;
+        const newUser = document.getElementById('chg-new-user').value.trim();
+        const newPass = document.getElementById('chg-new-pass').value;
+        const confPass = document.getElementById('chg-confirm-pass').value;
+        const errEl = document.getElementById('chg-auth-error');
+        const btn = document.getElementById('chg-auth-save-btn');
+
+        errEl.style.display = 'none';
+        if (!currUser || !currPass || !newUser || !newPass) {
+          errEl.textContent = 'Please fill all fields.';
+          errEl.style.display = 'block';
+          return;
+        }
+        if (newPass !== confPass) {
+          errEl.textContent = 'New Password and Confirm Password do not match.';
+          errEl.style.display = 'block';
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Syncing to all devices...';
+        try {
+          await window.AdminAuth.updateCredentialsLive(currUser, currPass, newUser, newPass);
+          closeModal('change-auth-modal');
+          showToast('✅ Username & Password updated! Synced across ALL devices.', 'toast-success');
+        } catch (err) {
+          if (err.code === 'GITHUB_NOT_CONNECTED') {
+            closeModal('change-auth-modal');
+            openGithubModal();
+            showToast('Please connect your GitHub Token once to sync login across all devices.', 'toast-error');
+          } else {
+            errEl.textContent = '❌ ' + err.message;
+            errEl.style.display = 'block';
+          }
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '🚀 Save & Sync All Devices';
+        }
       };
 
       function unlockShell() {
@@ -2224,7 +2354,7 @@
       };
 
       // ================= INIT =================
-      if (sessionStorage.getItem('blueray_seo_auth') === 'true') {
+      if (window.AdminAuth && window.AdminAuth.isAuthenticated()) {
         unlockShell();
       }
     })();

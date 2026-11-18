@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /seo-admin.html
+Disallow: /admin-auth.json
 
 Sitemap: https://blueraywealth.com/sitemap.xml
