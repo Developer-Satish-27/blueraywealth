@@ -1,8 +1,8 @@
 {
   "version": 1,
   "algorithm": "SHA-256",
-  "salt": "brw_a7d3f91c4e82b506",
-  "usernameHash": "eb6b770e38b32c4133df09bea9c7ed7f8324087cea6157b554e7ddacd63e9e0d",
-  "credentialHash": "3235c2e84ab779c4ffd14d4c276e35b7255766b9e5371632c211f37722a82ea7",
-  "updatedAt": "2026-11-18T12:44:35.892Z"
+  "salt": "brw_8dfdfa95816e3085",
+  "usernameHash": "af984b097ae6473a28fda23f0f106463304c0b19824839248199a78a7ac88b66",
+  "credentialHash": "6822d22a812fc3b24cd61429fe80d62a3d8a0c0775f496ac2c27646d2068b865",
+  "updatedAt": "2026-11-21T08:31:37.986Z"
 }
