@@ -733,7 +733,17 @@
       <!-- Left Sidebar -->
       <aside class="sidebar">
         <div>
-          <button class="btn btn-primary btn-full btn-sm" onclick="openSiteAuditView()">
+          
+        <!-- Content Studio: Blog & Articles Manager -->
+        <div style="margin-bottom: 12px;">
+          <button class="btn btn-sm btn-full" id="btn-sidebar-blog" onclick="openBlogManagerView()" style="background: linear-gradient(135deg, #0d2c6c 0%, #1e40af 100%); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; font-weight: 700; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 2px 6px rgba(13,44,108,0.2);">
+            <span style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:1.1rem;">📰</span> Blog &amp; Articles
+            </span>
+            <span id="blog-sidebar-badge" style="background:#38bdf8; color:#0c2044; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:999px;">0</span>
+          </button>
+        </div>
+        <button class="btn btn-primary btn-full btn-sm" onclick="openSiteAuditView()">
             📊 Site-Wide SEO Audit (All Pages)
           </button>
         </div>
@@ -1092,6 +1102,76 @@
           </div>
         </section>
 
+      
+        <!-- ================= VIEW 4: BLOG & ARTICLE MANAGER ================= -->
+        <section id="view-blog-manager" style="display:none;">
+          <div class="page-header-bar">
+            <div>
+              <h2 class="page-header-title">
+                <span>📰 Blog &amp; Article Manager</span>
+              </h2>
+              <div class="page-header-url">
+                <span>Create, edit, and publish rich mutual fund guides with text &amp; images live on <code>blueraywealth.com/blog.html</code></span>
+              </div>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary btn-sm" onclick="openCreateBlogModal()">
+                ✨ + Write New Blog Post
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="reloadBlogsFromSource()">
+                🔄 Refresh Posts
+              </button>
+              <a href="blog.html" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-accent" style="text-decoration:none;">
+                🌐 View Live Blog
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Stats Cards -->
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:14px; margin-bottom:20px;">
+            <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:14px 18px; display:flex; align-items:center; gap:14px;">
+              <div style="width:40px; height:40px; border-radius:8px; background:#eff6ff; color:#1d4ed8; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">📚</div>
+              <div>
+                <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Published Articles</div>
+                <div id="stat-total-blogs" style="font-size:1.25rem; font-weight:800; color:var(--text);">Loading...</div>
+              </div>
+            </div>
+            <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:14px 18px; display:flex; align-items:center; gap:14px;">
+              <div style="width:40px; height:40px; border-radius:8px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">🚀</div>
+              <div>
+                <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Live Publishing</div>
+                <div style="font-size:0.92rem; font-weight:700; color:#059669;">1-Click Direct to GitHub</div>
+              </div>
+            </div>
+            <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:14px 18px; display:flex; align-items:center; gap:14px;">
+              <div style="width:40px; height:40px; border-radius:8px; background:#fef3c7; color:#d97706; display:flex; align-items:center; justify-content:center; font-size:1.3rem;">🗺️</div>
+              <div>
+                <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Sitemap Sync</div>
+                <div style="font-size:0.92rem; font-weight:700; color:#d97706;">Auto-Updated XML</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category filter & Search bar -->
+          <div style="background:#fff; border:1px solid var(--border); border-radius:10px; padding:12px 16px; margin-bottom:18px; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;" id="admin-blog-cat-filters">
+              <button class="btn btn-xs btn-primary admin-cat-pill active" onclick="filterAdminBlogCat('All', this)">All</button>
+              <button class="btn btn-xs btn-outline admin-cat-pill" onclick="filterAdminBlogCat('Mutual Funds', this)">Mutual Funds</button>
+              <button class="btn btn-xs btn-outline admin-cat-pill" onclick="filterAdminBlogCat('SIP & Compounding', this)">SIP &amp; Compounding</button>
+              <button class="btn btn-xs btn-outline admin-cat-pill" onclick="filterAdminBlogCat('Retirement Planning', this)">Retirement</button>
+              <button class="btn btn-xs btn-outline admin-cat-pill" onclick="filterAdminBlogCat('Tax Saving', this)">Tax Saving</button>
+            </div>
+            <div style="min-width:240px;">
+              <input type="text" id="admin-blog-search" class="form-control form-control-sm" placeholder="🔍 Search articles by title..." oninput="handleAdminBlogSearch()">
+            </div>
+          </div>
+
+          <!-- Articles Cards Grid -->
+          <div id="admin-blogs-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:18px; margin-bottom:40px;">
+            <!-- Populated via JavaScript -->
+          </div>
+        </section>
+
       </main>
     </div>
   </div>
@@ -1237,6 +1317,7 @@
         { file: 'terms-conditions.html', name: 'Terms & Conditions', path: '/terms-conditions.html' },
         { file: 'disclaimer.html', name: 'Disclaimer', path: '/disclaimer.html' },
         { file: 'risk-disclosure.html', name: 'Risk Disclosure', path: '/risk-disclosure.html' },
+        { file: 'blog.html', name: 'Blog & Insights', path: '/blog.html' },
         { file: 'thank-you.html', name: 'Thank You Page', path: '/thank-you.html' }
       ];
 
@@ -1406,6 +1487,7 @@
         renderSidebar();
         updateGithubStatusUI();
         selectHtmlPage('index.html');
+        if (typeof updateBlogSidebarCount === 'function') updateBlogSidebarCount();
       }
 
       // ================= GITHUB CONFIG & API =================
@@ -2044,6 +2126,7 @@
         document.getElementById('view-page-editor').style.display = 'block';
         document.getElementById('view-tech-editor').style.display = 'none';
         document.getElementById('view-site-audit').style.display = 'none';
+        if (document.getElementById('view-blog-manager')) document.getElementById('view-blog-manager').style.display = 'none';
         highlightSidebar();
 
         const p = PAGES.find(x => x.file === fileName) || { file: fileName, name: fileName, path: '/' + fileName };
@@ -2317,6 +2400,7 @@
       window.openSiteAuditView = function () {
         document.getElementById('view-page-editor').style.display = 'none';
         document.getElementById('view-tech-editor').style.display = 'none';
+        if (document.getElementById('view-blog-manager')) document.getElementById('view-blog-manager').style.display = 'none';
         document.getElementById('view-site-audit').style.display = 'block';
         runFullSiteAudit();
       };
@@ -2358,6 +2442,757 @@
         unlockShell();
       }
     })();
-  </script>
+  
+      // ========================================================================
+      // 📰 BLOG & ARTICLE STUDIO (ZERO-BACKEND LIVE PUBLISHER)
+      // ========================================================================
+      let allAdminBlogs = [];
+      let pendingBlogImage = null; // { file, name, dataUrl, rawBase64 }
+      let activeAdminBlogCat = 'All';
+
+      // Binary GitHub Commit for Images (PNG, JPG, WebP)
+      async function commitBinaryFileToGithub(filePath, base64Content, commitMessage) {
+        const cfg = getGhConfig();
+        if (!isGhConnected()) {
+          openGithubModal();
+          throw new Error('Please connect your GitHub Token first to upload blog images.');
+        }
+
+        // Check if image exists to obtain SHA
+        let existingSha = null;
+        try {
+          const url = 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo + '/contents/' + filePath + '?ref=' + encodeURIComponent(cfg.branch) + '&_t=' + Date.now();
+          const res = await fetch(url, {
+            headers: {
+              'Authorization': 'Bearer ' + cfg.token,
+              'Accept': 'application/vnd.github+json'
+            }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            existingSha = data.sha;
+          }
+        } catch (e) {}
+
+        const url = 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo + '/contents/' + filePath;
+        const body = {
+          message: commitMessage,
+          content: base64Content,
+          branch: cfg.branch
+        };
+        if (existingSha) body.sha = existingSha;
+
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + cfg.token,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || ('Image upload failed (' + res.status + ')'));
+        }
+        return await res.json();
+      }
+
+      window.openBlogManagerView = function () {
+        if (hasUnsaved && !confirm('You have unsaved edits on the current page. Discard them and switch?')) {
+          return;
+        }
+        hasUnsaved = false;
+        activeTechFile = null;
+        document.getElementById('unsaved-badge')?.classList.remove('show');
+        document.getElementById('view-page-editor').style.display = 'none';
+        document.getElementById('view-tech-editor').style.display = 'none';
+        document.getElementById('view-site-audit').style.display = 'none';
+        document.getElementById('view-blog-manager').style.display = 'block';
+
+        // Sidebar active styling
+        document.querySelectorAll('.page-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('btn-sidebar-blog')?.classList.add('active');
+
+        loadAllBlogsList();
+      };
+
+      window.updateBlogSidebarCount = async function () {
+        try {
+          const res = await fetchFileContent('blogs.json');
+          const blogs = JSON.parse(res.content);
+          const count = Array.isArray(blogs) ? blogs.length : 0;
+          const badge = document.getElementById('blog-sidebar-badge');
+          if (badge) badge.textContent = count;
+        } catch (e) {}
+      };
+
+      window.loadAllBlogsList = async function () {
+        const listEl = document.getElementById('admin-blogs-list');
+        listEl.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">Loading articles from repository...</div>';
+
+        try {
+          const res = await fetchFileContent('blogs.json');
+          allAdminBlogs = JSON.parse(res.content);
+          if (!Array.isArray(allAdminBlogs)) allAdminBlogs = [];
+        } catch (err) {
+          console.warn('Could not fetch blogs.json:', err);
+          allAdminBlogs = [];
+        }
+
+        // Update stats
+        const statTotal = document.getElementById('stat-total-blogs');
+        if (statTotal) statTotal.textContent = allAdminBlogs.length + ' Published';
+        const badge = document.getElementById('blog-sidebar-badge');
+        if (badge) badge.textContent = allAdminBlogs.length;
+
+        renderAdminBlogsGrid(allAdminBlogs);
+      };
+
+      window.reloadBlogsFromSource = async function () {
+        showToast('🔄 Refreshing blogs...', 'toast-info');
+        await loadAllBlogsList();
+        showToast('✅ Articles updated!', 'toast-success');
+      };
+
+      function renderAdminBlogsGrid(blogs) {
+        const listEl = document.getElementById('admin-blogs-list');
+        const q = (document.getElementById('admin-blog-search')?.value || '').toLowerCase().trim();
+
+        const filtered = blogs.filter(p => {
+          const matchesCat = activeAdminBlogCat === 'All' || (p.category && p.category.toLowerCase() === activeAdminBlogCat.toLowerCase());
+          const matchesQ = !q || (p.title && p.title.toLowerCase().includes(q)) || (p.excerpt && p.excerpt.toLowerCase().includes(q));
+          return matchesCat && matchesQ;
+        });
+
+        if (filtered.length === 0) {
+          listEl.innerHTML = '<div style="grid-column: 1/-1; background:#fff; border:1px dashed var(--border); border-radius:12px; text-align:center; padding:48px 20px; color:var(--text-muted);">' +
+            '<div style="font-size:2rem; margin-bottom:8px;">📰</div>' +
+            '<h3 style="color:var(--text); margin-bottom:6px;">No articles found</h3>' +
+            '<p style="font-size:0.86rem; margin-bottom:16px;">Try a different keyword or write a new blog post.</p>' +
+            '<button class="btn btn-primary btn-sm" onclick="openCreateBlogModal()">✨ + Write New Blog Post</button>' +
+            '</div>';
+          return;
+        }
+
+        listEl.innerHTML = filtered.map(post => {
+          const img = post.image || 'https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?auto=format&fit=crop&w=600&q=80';
+          const postSlug = post.slug || '';
+          const postTitle = escapeHtmlText(post.title || 'Untitled Post');
+          const postCat = escapeHtmlText(post.category || 'General');
+          const postExcerpt = escapeHtmlText(post.excerpt || '');
+          const postDate = post.date || '';
+
+          return '<div style="background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 6px rgba(0,0,0,0.03);">' +
+            '<div style="width:100%; height:160px; background:#0c2044; position:relative; overflow:hidden;">' +
+              '<img src="' + img + '" alt="' + postTitle + '" style="width:100%; height:100%; object-fit:cover;">' +
+              '<span style="position:absolute; top:10px; left:10px; background:rgba(13,44,108,0.9); color:#fff; font-size:0.7rem; font-weight:700; text-transform:uppercase; padding:3px 8px; border-radius:4px; backdrop-filter:blur(4px);">' + postCat + '</span>' +
+            '</div>' +
+            '<div style="padding:16px; display:flex; flex-direction:column; flex:1;">' +
+              '<div style="font-size:0.74rem; color:var(--text-muted); margin-bottom:6px;">📅 ' + postDate + ' • ⏱️ ' + (post.readTime || '5 min read') + '</div>' +
+              '<h4 style="font-size:1.02rem; font-weight:700; color:var(--text); line-height:1.4; margin-bottom:8px;">' + postTitle + '</h4>' +
+              '<p style="font-size:0.82rem; color:var(--text-muted); line-height:1.5; margin-bottom:14px; flex:1; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">' + postExcerpt + '</p>' +
+              '<div style="padding-top:10px; border-top:1px solid #f1f5f9; display:flex; align-items:center; justify-content:space-between; gap:6px;">' +
+                '<button class="btn btn-xs btn-primary" onclick="openEditBlogModal(\'' + (post.id || postSlug) + '\')">✏️ Edit</button>' +
+                '<a href="blog.html?post=' + encodeURIComponent(postSlug) + '" target="_blank" rel="noopener noreferrer" class="btn btn-xs btn-outline" style="text-decoration:none;">👁️ View Live</a>' +
+                '<button class="btn btn-xs btn-danger-outline" onclick="deleteBlogPost(\'' + (post.id || postSlug) + '\')">🗑️ Delete</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+
+      window.filterAdminBlogCat = function (cat, btn) {
+        activeAdminBlogCat = cat;
+        document.querySelectorAll('.admin-cat-pill').forEach(b => b.classList.remove('active', 'btn-primary'));
+        document.querySelectorAll('.admin-cat-pill').forEach(b => b.classList.add('btn-outline'));
+        btn.classList.add('active', 'btn-primary');
+        btn.classList.remove('btn-outline');
+        renderAdminBlogsGrid(allAdminBlogs);
+      };
+
+      window.handleAdminBlogSearch = function () {
+        renderAdminBlogsGrid(allAdminBlogs);
+      };
+
+      // Create / Edit Modal logic
+      window.openCreateBlogModal = function () {
+        document.getElementById('blog-modal-header-title').textContent = '✨ Write New Blog Post';
+        document.getElementById('edit-post-id').value = '';
+        document.getElementById('edit-post-title').value = '';
+        document.getElementById('edit-post-slug').value = '';
+        document.getElementById('auto-slug-toggle').checked = true;
+        document.getElementById('edit-post-cat').value = 'Mutual Funds';
+        document.getElementById('edit-post-author').value = 'Suresh Saini (ARN-347947)';
+        document.getElementById('edit-post-date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('edit-post-readtime').value = '5 min read';
+        document.getElementById('edit-post-excerpt').value = '';
+        document.getElementById('edit-post-content').value = '## Introduction\n\nWrite the introduction here...\n\n## Key Concepts to Understand\n\n- Key point 1\n- Key point 2\n\n> \"A disciplined investment strategy is the cornerstone of long-term compounding.\"\n\n## Summary & Guidance for Investors\n\nConclusion and regulatory reminder...';
+        document.getElementById('edit-post-image-url').value = '';
+        document.getElementById('edit-post-image-alt').value = '';
+        document.getElementById('edit-post-metatitle').value = '';
+        document.getElementById('edit-post-metadesc').value = '';
+        pendingBlogImage = null;
+
+        removeSelectedImage();
+        switchImageTab('upload');
+        switchContentMode('write');
+        updateBlogSeoCounts();
+
+        document.getElementById('blog-editor-modal').classList.add('open');
+      };
+
+      window.openEditBlogModal = function (idOrSlug) {
+        const post = allAdminBlogs.find(p => (p.id && p.id === idOrSlug) || p.slug === idOrSlug);
+        if (!post) {
+          showToast('❌ Blog post not found', 'toast-error');
+          return;
+        }
+
+        document.getElementById('blog-modal-header-title').textContent = '✏️ Edit: ' + post.title;
+        document.getElementById('edit-post-id').value = post.id || '';
+        document.getElementById('edit-post-title').value = post.title || '';
+        document.getElementById('edit-post-slug').value = post.slug || '';
+        document.getElementById('auto-slug-toggle').checked = false;
+        document.getElementById('edit-post-cat').value = post.category || 'Mutual Funds';
+        document.getElementById('edit-post-author').value = post.author || 'Suresh Saini (ARN-347947)';
+        document.getElementById('edit-post-date').value = post.date || new Date().toISOString().split('T')[0];
+        document.getElementById('edit-post-readtime').value = post.readTime || '5 min read';
+        document.getElementById('edit-post-excerpt').value = post.excerpt || '';
+        document.getElementById('edit-post-content').value = post.content || '';
+        document.getElementById('edit-post-image-url').value = post.image || '';
+        document.getElementById('edit-post-image-alt').value = post.imageAlt || '';
+        document.getElementById('edit-post-metatitle').value = post.metaTitle || '';
+        document.getElementById('edit-post-metadesc').value = post.metaDescription || '';
+        pendingBlogImage = null;
+
+        if (post.image) {
+          showImagePreviewBox(post.image, post.image.split('/').pop() || 'cover-image');
+        } else {
+          removeSelectedImage();
+        }
+
+        switchImageTab('upload');
+        switchContentMode('write');
+        updateBlogSeoCounts();
+
+        document.getElementById('blog-editor-modal').classList.add('open');
+      };
+
+      window.handleTitleChange = function (val) {
+        const auto = document.getElementById('auto-slug-toggle').checked;
+        if (auto) {
+          const slug = val.toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/\s+/g, '-');
+          document.getElementById('edit-post-slug').value = slug;
+        }
+      };
+
+      // Image tab switching & selection
+      window.switchImageTab = function (tab) {
+        const paneUp = document.getElementById('image-upload-pane');
+        const paneUrl = document.getElementById('image-url-pane');
+        const btnUp = document.getElementById('btn-tab-upload');
+        const btnUrl = document.getElementById('btn-tab-url');
+
+        if (tab === 'upload') {
+          paneUp.style.display = 'block';
+          paneUrl.style.display = 'none';
+          btnUp.classList.add('btn-primary');
+          btnUp.classList.remove('btn-outline');
+          btnUrl.classList.add('btn-outline');
+          btnUrl.classList.remove('btn-primary');
+        } else {
+          paneUp.style.display = 'none';
+          paneUrl.style.display = 'block';
+          btnUrl.classList.add('btn-primary');
+          btnUrl.classList.remove('btn-outline');
+          btnUp.classList.add('btn-outline');
+          btnUp.classList.remove('btn-primary');
+        }
+      };
+
+      window.handleImageFileSelected = function (input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+
+        if (file.size > 5 * 1024 * 1024) {
+          showToast('❌ Image size exceeds 5MB limit. Please compress image.', 'toast-error');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const dataUrl = e.target.result;
+          const rawBase64 = dataUrl.split(',')[1];
+          pendingBlogImage = {
+            file: file,
+            name: file.name,
+            dataUrl: dataUrl,
+            rawBase64: rawBase64,
+            ext: file.name.split('.').pop() || 'jpg'
+          };
+          showImagePreviewBox(dataUrl, file.name);
+          showToast('📸 Image selected! It will be uploaded directly when you publish.', 'toast-success');
+        };
+        reader.readAsDataURL(file);
+      };
+
+      window.handleImageUrlInput = function (url) {
+        if (!url || !url.trim()) {
+          removeSelectedImage();
+          return;
+        }
+        pendingBlogImage = null;
+        showImagePreviewBox(url.trim(), 'Web Image');
+      };
+
+      function showImagePreviewBox(src, filename) {
+        const wrap = document.getElementById('image-preview-wrap');
+        const thumb = document.getElementById('image-preview-thumb');
+        const nameEl = document.getElementById('image-preview-filename');
+        if (wrap && thumb && nameEl) {
+          thumb.src = src;
+          nameEl.textContent = filename;
+          wrap.style.display = 'flex';
+        }
+      }
+
+      window.removeSelectedImage = function () {
+        pendingBlogImage = null;
+        const fileInput = document.getElementById('edit-post-file-input');
+        if (fileInput) fileInput.value = '';
+        const urlInput = document.getElementById('edit-post-image-url');
+        if (urlInput) urlInput.value = '';
+        const wrap = document.getElementById('image-preview-wrap');
+        if (wrap) wrap.style.display = 'none';
+      };
+
+      // Content writing & preview tabs
+      window.switchContentMode = function (mode) {
+        const paneWrite = document.getElementById('content-editor-pane');
+        const panePrev = document.getElementById('content-preview-pane');
+        const bar = document.getElementById('content-toolbar');
+        const btnWrite = document.getElementById('btn-mode-write');
+        const btnPrev = document.getElementById('btn-mode-preview');
+
+        if (mode === 'write') {
+          paneWrite.style.display = 'block';
+          bar.style.display = 'flex';
+          panePrev.style.display = 'none';
+          btnWrite.classList.add('btn-primary');
+          btnWrite.classList.remove('btn-outline');
+          btnPrev.classList.add('btn-outline');
+          btnPrev.classList.remove('btn-primary');
+        } else {
+          paneWrite.style.display = 'none';
+          bar.style.display = 'none';
+          panePrev.style.display = 'block';
+          btnPrev.classList.add('btn-primary');
+          btnPrev.classList.remove('btn-outline');
+          btnWrite.classList.add('btn-outline');
+          btnWrite.classList.remove('btn-primary');
+
+          const raw = document.getElementById('edit-post-content').value;
+          panePrev.innerHTML = parseBlogMarkdown(raw);
+        }
+      };
+
+      function parseBlogMarkdown(md) {
+        if (!md) return '<p style="color:#94a3b8;">No content written yet.</p>';
+        let h = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        h = h.replace(/^&gt;\s*(.*?)$/gm, '<blockquote style="border-left:4px solid #0d2c6c; background:#f8fafc; padding:12px 16px; margin:16px 0; font-style:italic;">$1</blockquote>');
+        h = h.replace(/^### (.*$)/gim, '<h3 style="font-size:1.15rem; font-weight:700; color:#0d2c6c; margin:20px 0 8px;">$1</h3>');
+        h = h.replace(/^## (.*$)/gim, '<h2 style="font-size:1.35rem; font-weight:800; color:#0d2c6c; margin:24px 0 10px; border-bottom:1px solid #e2e8f0; padding-bottom:4px;">$1</h2>');
+        h = h.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+        h = h.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+        h = h.replace(/!\[(.*?)\]\((.*?)\)/gim, '<div style="margin:16px 0;"><img src="$2" alt="$1" style="max-width:100%; border-radius:8px;"><div style="font-size:0.75rem; color:#64748b; margin-top:4px;">$1</div></div>');
+        h = h.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank" style="color:#0d2c6c; text-decoration:underline;">$1</a>');
+        h = h.replace(/^\s*-\s+(.*?)$/gm, '<li>$1</li>');
+        h = h.replace(/(<li>.*<\/li>)/s, '<ul style="margin:12px 0 16px 20px; padding-left:8px;">$1</ul>');
+
+        const parts = h.split(/\n\s*\n/);
+        return parts.map(p => {
+          p = p.trim();
+          if (!p) return '';
+          if (p.startsWith('<h') || p.startsWith('<blockquote') || p.startsWith('<ul') || p.startsWith('<div')) return p;
+          return '<p style="margin-bottom:12px; line-height:1.6;">' + p.replace(/\n/g, '<br>') + '</p>';
+        }).join('');
+      }
+
+      window.insertContentSnippet = function (snippet) {
+        const textarea = document.getElementById('edit-post-content');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        textarea.value = text.substring(0, start) + snippet + text.substring(end);
+        textarea.focus();
+        textarea.selectionStart = textarea.selectionEnd = start + snippet.length;
+      };
+
+      window.wrapContentSelection = function (before, after) {
+        const textarea = document.getElementById('edit-post-content');
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        const selected = text.substring(start, end) || 'Text';
+        const wrapped = before + selected + after;
+        textarea.value = text.substring(0, start) + wrapped + text.substring(end);
+        textarea.focus();
+        textarea.selectionStart = start + before.length;
+        textarea.selectionEnd = start + before.length + selected.length;
+      };
+
+      window.insertInlineImagePrompt = function () {
+        const url = prompt('Enter inline image URL (or local path like assets/blogs/picture.jpg):');
+        if (!url) return;
+        const alt = prompt('Enter short image description / caption:', 'Investment Illustration') || 'Image';
+        insertContentSnippet('![' + alt + '](' + url + ')\n\n');
+      };
+
+      window.updateBlogSeoCounts = function () {
+        const titleVal = document.getElementById('edit-post-metatitle')?.value || '';
+        const descVal = document.getElementById('edit-post-metadesc')?.value || '';
+        const titleCnt = document.getElementById('blog-meta-title-count');
+        const descCnt = document.getElementById('blog-meta-desc-count');
+        if (titleCnt) titleCnt.textContent = titleVal.length + ' / 60';
+        if (descCnt) descCnt.textContent = descVal.length + ' / 160';
+      };
+
+      window.saveBlogDraftLocal = function () {
+        const draft = {
+          title: document.getElementById('edit-post-title').value,
+          slug: document.getElementById('edit-post-slug').value,
+          category: document.getElementById('edit-post-cat').value,
+          author: document.getElementById('edit-post-author').value,
+          date: document.getElementById('edit-post-date').value,
+          readTime: document.getElementById('edit-post-readtime').value,
+          excerpt: document.getElementById('edit-post-excerpt').value,
+          content: document.getElementById('edit-post-content').value,
+          image: document.getElementById('edit-post-image-url').value,
+          imageAlt: document.getElementById('edit-post-image-alt').value
+        };
+        localStorage.setItem('blueray_blog_draft', JSON.stringify(draft));
+        showToast('💾 Draft saved in browser!', 'toast-success');
+      };
+
+      // PUBLISH LIVE DIRECTLY TO GITHUB (Zero-Backend)
+      window.executePublishBlogLive = async function () {
+        const title = document.getElementById('edit-post-title').value.trim();
+        let slug = document.getElementById('edit-post-slug').value.trim();
+        const category = document.getElementById('edit-post-cat').value;
+        const author = document.getElementById('edit-post-author').value.trim() || 'Suresh Saini (ARN-347947)';
+        const date = document.getElementById('edit-post-date').value || new Date().toISOString().split('T')[0];
+        const readTime = document.getElementById('edit-post-readtime').value.trim() || '5 min read';
+        const excerpt = document.getElementById('edit-post-excerpt').value.trim();
+        const content = document.getElementById('edit-post-content').value.trim();
+        const customMetaTitle = document.getElementById('edit-post-metatitle').value.trim();
+        const customMetaDesc = document.getElementById('edit-post-metadesc').value.trim();
+        let imageUrl = document.getElementById('edit-post-image-url').value.trim();
+        const imageAlt = document.getElementById('edit-post-image-alt').value.trim();
+        const editId = document.getElementById('edit-post-id').value;
+
+        if (!title || !slug || !excerpt || !content) {
+          showToast('❌ Please fill in Title, Slug, Excerpt, and Article Content.', 'toast-error');
+          return;
+        }
+
+        if (!isGhConnected()) {
+          openGithubModal();
+          showToast('Please connect your GitHub Token first to publish live to blueraywealth.com.', 'toast-error');
+          return;
+        }
+
+        const btn = document.getElementById('btn-publish-blog-live');
+        btn.disabled = true;
+        btn.textContent = '🚀 Publishing Live...';
+
+        try {
+          // Step 1: Upload image to assets/blogs/ if a file was selected from device
+          if (pendingBlogImage && pendingBlogImage.rawBase64) {
+            btn.textContent = '📸 Uploading Image Asset...';
+            const cleanSlug = slug.replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+            const filename = 'assets/blogs/' + cleanSlug + '-' + Date.now() + '.' + pendingBlogImage.ext;
+            await commitBinaryFileToGithub(filename, pendingBlogImage.rawBase64, 'blog: upload cover image for ' + cleanSlug);
+            imageUrl = filename;
+            showToast('✅ Image uploaded to website repository!', 'toast-info');
+          }
+
+          // Step 2: Prepare Post Object
+          const postObj = {
+            id: editId || ('post-' + Date.now()),
+            slug: slug,
+            title: title,
+            category: category,
+            excerpt: excerpt,
+            author: author,
+            date: date,
+            readTime: readTime,
+            image: imageUrl || 'https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?auto=format&fit=crop&w=1200&q=80',
+            imageAlt: imageAlt || title,
+            metaTitle: customMetaTitle || (title + ' | BlueRay Wealth'),
+            metaDescription: customMetaDesc || excerpt,
+            content: content
+          };
+
+          // Step 3: Fetch latest blogs.json from GitHub to guarantee freshness
+          btn.textContent = '📝 Updating blogs.json...';
+          let latestBlogs = [];
+          try {
+            const blogData = await fetchFileContent('blogs.json');
+            latestBlogs = JSON.parse(blogData.content);
+            if (!Array.isArray(latestBlogs)) latestBlogs = [];
+          } catch (e) {
+            latestBlogs = allAdminBlogs.slice();
+          }
+
+          // Update or unshift
+          const idx = latestBlogs.findIndex(p => (postObj.id && p.id === postObj.id) || p.slug === postObj.slug);
+          if (idx >= 0) {
+            latestBlogs[idx] = postObj;
+          } else {
+            latestBlogs.unshift(postObj);
+          }
+
+          // Commit blogs.json
+          const newBlogsJson = JSON.stringify(latestBlogs, null, 2);
+          await commitFileToGithub('blogs.json', newBlogsJson, 'blog: publish article "' + title + '" via SEO Admin');
+
+          // Step 4: Ensure URL is in sitemap.xml
+          btn.textContent = '🗺️ Syncing sitemap.xml...';
+          try {
+            const sitemapData = await fetchFileContent('sitemap.xml');
+            const postLoc = 'https://blueraywealth.com/blog.html?post=' + slug;
+            if (!sitemapData.content.includes(postLoc)) {
+              const urlEntry = '  <url>\n    <loc>' + postLoc + '</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n</urlset>';
+              const updatedSitemap = sitemapData.content.replace('</urlset>', urlEntry);
+              await commitFileToGithub('sitemap.xml', updatedSitemap, 'seo: add ' + slug + ' to sitemap.xml');
+            }
+          } catch (smErr) {
+            console.warn('Sitemap update notice:', smErr);
+          }
+
+          allAdminBlogs = latestBlogs;
+          closeModal('blog-editor-modal');
+          renderAdminBlogsGrid(allAdminBlogs);
+          updateBlogSidebarCount();
+
+          showToast('🎉 Blog "' + title + '" published live! It will appear on blueraywealth.com in ~1 minute.', 'toast-success');
+
+          // Ask if user wants to view it live
+          setTimeout(() => {
+            if (confirm('Post is published live! Would you like to view it on blueraywealth.com now?')) {
+              window.open('blog.html?post=' + encodeURIComponent(slug), '_blank');
+            }
+          }, 800);
+
+        } catch (err) {
+          showToast('❌ ' + err.message, 'toast-error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '🚀 Publish Live to Website';
+        }
+      };
+
+      window.deleteBlogPost = async function (idOrSlug) {
+        const post = allAdminBlogs.find(p => (p.id && p.id === idOrSlug) || p.slug === idOrSlug);
+        const name = post ? post.title : 'this article';
+
+        if (!confirm('Are you sure you want to permanently delete "' + name + '"? It will be removed from the live website.')) {
+          return;
+        }
+
+        if (!isGhConnected()) {
+          openGithubModal();
+          showToast('Please connect your GitHub Token first to delete posts live.', 'toast-error');
+          return;
+        }
+
+        showToast('🗑️ Deleting article...', 'toast-info');
+
+        try {
+          const updated = allAdminBlogs.filter(p => (p.id && p.id !== idOrSlug) && p.slug !== idOrSlug);
+          const newJson = JSON.stringify(updated, null, 2);
+          await commitFileToGithub('blogs.json', newJson, 'blog: delete article "' + name + '"');
+
+          allAdminBlogs = updated;
+          renderAdminBlogsGrid(allAdminBlogs);
+          updateBlogSidebarCount();
+          showToast('✅ Article removed from live website.', 'toast-success');
+        } catch (err) {
+          showToast('❌ ' + err.message, 'toast-error');
+        }
+      };
+
+    </script>
+
+  <!-- ================= MODAL: BLOG POST EDITOR ================= -->
+  <div class="modal-backdrop" id="blog-editor-modal">
+    <div class="modal-box" style="max-width: 960px; max-height: 92vh; display: flex; flex-direction: column;">
+      <div class="modal-head">
+        <div>
+          <h3 id="blog-modal-header-title">✨ Write New Blog Post</h3>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin:2px 0 0;">Add text and images to publish an article live on blueraywealth.com</p>
+        </div>
+        <button class="modal-close" onclick="closeModal('blog-editor-modal')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="overflow-y: auto; padding: 20px; flex: 1;">
+        <input type="hidden" id="edit-post-id" value="">
+
+        <!-- Title & Slug -->
+        <div class="field-group">
+          <label class="field-label" for="edit-post-title">Blog Title *</label>
+          <input type="text" id="edit-post-title" class="form-control" placeholder="e.g. Mutual Funds vs Fixed Deposits: Where to Invest in 2026?" oninput="handleTitleChange(this.value)">
+        </div>
+
+        <div class="field-group">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label class="field-label" for="edit-post-slug">Slug / URL Handle *</label>
+            <label style="font-size:0.75rem; color:var(--text-muted); cursor:pointer;">
+              <input type="checkbox" id="auto-slug-toggle" checked> Auto-generate from title
+            </label>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.82rem; color:var(--text-muted); background:#f1f5f9; padding:6px 10px; border:1px solid var(--border); border-radius:6px; white-space:nowrap;">blueraywealth.com/blog.html?post=</span>
+            <input type="text" id="edit-post-slug" class="form-control" placeholder="mutual-funds-vs-fd">
+          </div>
+        </div>
+
+        <!-- Metadata Grid: Category, Author, Date, Read Time -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:16px;">
+          <div class="field-group" style="margin-bottom:0;">
+            <label class="field-label" for="edit-post-cat">Category *</label>
+            <select id="edit-post-cat" class="form-control">
+              <option value="Mutual Funds">Mutual Funds</option>
+              <option value="SIP & Compounding">SIP &amp; Compounding</option>
+              <option value="Retirement Planning">Retirement Planning</option>
+              <option value="Tax Saving">Tax Saving</option>
+              <option value="Financial Planning">Financial Planning</option>
+              <option value="Market Insights">Market Insights</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin-bottom:0;">
+            <label class="field-label" for="edit-post-author">Author</label>
+            <input type="text" id="edit-post-author" class="form-control" value="Suresh Saini (ARN-347947)">
+          </div>
+          <div class="field-group" style="margin-bottom:0;">
+            <label class="field-label" for="edit-post-date">Publish Date</label>
+            <input type="date" id="edit-post-date" class="form-control">
+          </div>
+          <div class="field-group" style="margin-bottom:0;">
+            <label class="field-label" for="edit-post-readtime">Reading Time</label>
+            <input type="text" id="edit-post-readtime" class="form-control" placeholder="e.g. 5 min read">
+          </div>
+        </div>
+
+        <!-- Excerpt -->
+        <div class="field-group">
+          <label class="field-label" for="edit-post-excerpt">Short Excerpt / Card Summary * (1-2 sentences for preview &amp; SEO)</label>
+          <textarea id="edit-post-excerpt" class="form-control" rows="2" placeholder="Brief summary to show in Google search results and blog listing cards..."></textarea>
+        </div>
+
+        <!-- Featured Image (Upload from device or enter URL) -->
+        <div class="field-group" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px;">
+          <label class="field-label" style="font-weight:700; color:var(--text); margin-bottom:8px;">🖼️ Featured Cover Image (Upload or Web URL)</label>
+          
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <button type="button" class="btn btn-xs btn-primary" id="btn-tab-upload" onclick="switchImageTab('upload')">📁 Upload from Device (PC/Mobile)</button>
+            <button type="button" class="btn btn-xs btn-outline" id="btn-tab-url" onclick="switchImageTab('url')">🔗 Image Web URL</button>
+          </div>
+
+          <div id="image-upload-pane">
+            <div style="border:2px dashed #cbd5e1; border-radius:8px; padding:16px; text-align:center; background:#fff; cursor:pointer;" onclick="document.getElementById('edit-post-file-input').click()">
+              <input type="file" id="edit-post-file-input" accept="image/*" style="display:none;" onchange="handleImageFileSelected(this)">
+              <div style="font-size:1.8rem; margin-bottom:4px;">📸</div>
+              <div style="font-weight:600; color:var(--primary); font-size:0.88rem;">Click to select an image from your device</div>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Supports JPG, PNG, WebP • Auto-uploaded directly to website repository</div>
+            </div>
+          </div>
+
+          <div id="image-url-pane" style="display:none;">
+            <input type="url" id="edit-post-image-url" class="form-control" placeholder="https://images.unsplash.com/... or assets/blogs/banner.jpg" oninput="handleImageUrlInput(this.value)">
+          </div>
+
+          <!-- Image Preview Box -->
+          <div id="image-preview-wrap" style="display:none; margin-top:12px; align-items:center; gap:14px; background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
+            <img id="image-preview-thumb" src="" alt="Cover Preview" style="width:120px; height:70px; object-fit:cover; border-radius:6px;">
+            <div style="flex:1;">
+              <div id="image-preview-filename" style="font-weight:600; font-size:0.84rem; color:var(--text);">image.jpg</div>
+              <div id="image-preview-status" style="font-size:0.75rem; color:#059669;">Ready to publish</div>
+            </div>
+            <button type="button" class="btn btn-xs btn-danger-outline" onclick="removeSelectedImage()">Remove</button>
+          </div>
+
+          <div style="margin-top:10px;">
+            <label class="field-label" for="edit-post-image-alt" style="font-size:0.76rem;">Image Alt Text (For Google Images SEO)</label>
+            <input type="text" id="edit-post-image-alt" class="form-control form-control-sm" placeholder="e.g. Mutual Funds vs Fixed Deposits Comparison Chart">
+          </div>
+        </div>
+
+        <!-- Article Content Builder -->
+        <div class="field-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label class="field-label" style="font-weight:700;">📝 Article Content * (Headings, Paragraphs, Lists, Quotes)</label>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="btn btn-xs btn-primary" id="btn-mode-write" onclick="switchContentMode('write')">✍️ Write / Edit</button>
+              <button type="button" class="btn btn-xs btn-outline" id="btn-mode-preview" onclick="switchContentMode('preview')">👁️ Live Preview</button>
+            </div>
+          </div>
+
+          <!-- Formatting Quick Toolbar -->
+          <div id="content-toolbar" style="display:flex; flex-wrap:wrap; gap:4px; background:#f1f5f9; padding:6px 8px; border:1px solid var(--border); border-bottom:none; border-radius:8px 8px 0 0;">
+            <button type="button" class="btn btn-xs btn-outline" onclick="insertContentSnippet('## Heading 2\n\n')">H2</button>
+            <button type="button" class="btn btn-xs btn-outline" onclick="insertContentSnippet('### Heading 3\n\n')">H3</button>
+            <button type="button" class="btn btn-xs btn-outline" onclick="wrapContentSelection('**', '**')"><strong>B</strong></button>
+            <button type="button" class="btn btn-xs btn-outline" onclick="wrapContentSelection('*', '*')"><em>I</em></button>
+            <button type="button" class="btn btn-xs btn-outline" onclick="insertContentSnippet('- Point 1\n- Point 2\n- Point 3\n\n')">• List</button>
+            <button type="button" class="btn btn-xs btn-outline" onclick="insertContentSnippet('> \"Important quote or investor rule here...\"\n\n')">“ Quote</button>
+            <button type="button" class="btn btn-xs btn-outline" onclick="insertInlineImagePrompt()">🖼️ Insert Image</button>
+            <button type="button" class="btn btn-xs btn-outline" onclick="wrapContentSelection('[Link Title](', ')')">🔗 Link</button>
+          </div>
+
+          <div id="content-editor-pane">
+            <textarea id="edit-post-content" class="form-control" rows="14" style="border-radius:0 0 8px 8px; font-family:Consolas, monospace; font-size:0.88rem; line-height:1.6;" placeholder="Write your full article here using markdown formatting..."></textarea>
+          </div>
+
+          <div id="content-preview-pane" style="display:none; min-height:280px; max-height:400px; overflow-y:auto; padding:16px 20px; background:#fff; border:1px solid var(--border); border-radius:0 0 8px 8px; font-size:0.95rem; line-height:1.7;">
+            <!-- Live rendered preview -->
+          </div>
+        </div>
+
+        <!-- Collapsible On-Page SEO settings for blog -->
+        <details style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-top:14px;">
+          <summary style="font-weight:700; color:var(--text); cursor:pointer; font-size:0.86rem;">⚙️ Advanced On-Page SEO Settings (Meta Title &amp; Description)</summary>
+          <div style="margin-top:12px;">
+            <div class="field-group">
+              <div style="display:flex; justify-content:space-between;">
+                <label class="field-label" for="edit-post-metatitle">Custom Meta Title</label>
+                <span id="blog-meta-title-count" style="font-size:0.75rem; color:var(--text-muted);">0 / 60</span>
+              </div>
+              <input type="text" id="edit-post-metatitle" class="form-control form-control-sm" placeholder="Leave blank to use post title" oninput="updateBlogSeoCounts()">
+            </div>
+            <div class="field-group">
+              <div style="display:flex; justify-content:space-between;">
+                <label class="field-label" for="edit-post-metadesc">Custom Meta Description</label>
+                <span id="blog-meta-desc-count" style="font-size:0.75rem; color:var(--text-muted);">0 / 160</span>
+              </div>
+              <textarea id="edit-post-metadesc" class="form-control form-control-sm" rows="2" placeholder="Leave blank to use excerpt" oninput="updateBlogSeoCounts()"></textarea>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="modal-foot" style="background:#f8fafc; border-top:1px solid var(--border); padding:12px 20px;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('blog-editor-modal')">Cancel</button>
+        <button type="button" class="btn btn-outline btn-sm" onclick="saveBlogDraftLocal()">💾 Save Draft</button>
+        <button type="button" class="btn btn-success btn-sm" id="btn-publish-blog-live" onclick="executePublishBlogLive()">🚀 Publish Live to Website</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
