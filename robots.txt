@@ -3,5 +3,6 @@ Allow: /
 Disallow: /admin.html
 Disallow: /seo-admin.html
 Disallow: /admin-auth.json
+Disallow: /thank-you.html
 
 Sitemap: https://blueraywealth.com/sitemap.xml
